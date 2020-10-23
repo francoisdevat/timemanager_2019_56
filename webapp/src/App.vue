@@ -5,6 +5,17 @@
         <md-icon>menu</md-icon>
       </md-button>
       <span class="md-title">Gotham City Hall</span>
+      <div v-if="!logout" class="md-toolbar-section-end">
+        <md-button>{{ username }}</md-button>
+        <md-button>General Manager</md-button>
+        <md-button>Team Epitech</md-button>
+      </div>
+      <div class="md-toolbar-section-end">
+        <md-button class="bouton" @click="signout" v-if="!logout"
+          >Disconnect</md-button
+        >
+        <md-button class="boutons" v-if="logout">Connect</md-button>
+      </div>
     </md-toolbar>
 
     <md-drawer :md-active.sync="showNavigation" md-swipeable>
@@ -54,12 +65,6 @@
             ><span class="md-list-item-text">Login</span></router-link
           >
         </md-list-item>
-        <md-list-item>
-          <md-icon>error</md-icon>
-          <router-link to="/graph"
-            ><span class="md-list-item-text">Bar Chart</span></router-link
-          >
-        </md-list-item>
       </md-list>
     </md-drawer>
 
@@ -72,12 +77,26 @@
 </template>
 
 <script>
+import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
     showNavigation: false,
     showSidepanel: false,
+    logout: true,
+    username: null,
   }),
+  methods: {
+    signout: function() {
+      this.$router.push("login");
+      this.logout = true;
+    },
+  },
+  async mounted() {
+    await Axios.get("http://localhost:4000/api/users/1").then((response) => {
+      this.username = response.data.data.username;
+    });
+  },
 };
 </script>
 
@@ -104,5 +123,12 @@ export default {
 .md-content {
   padding: 16px;
 }
-
+.bouton {
+  background-color: red !important;
+  color: #fff !important;
+}
+.boutons {
+  background-color: green !important;
+  color: #fff !important;
+}
 </style>

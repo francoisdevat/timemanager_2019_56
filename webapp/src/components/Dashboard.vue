@@ -16,6 +16,7 @@
       >
     </div>
     <div class="test"><Graph /> <Graph /></div>
+    <div class="test"><Graph /> <Graph /></div>
   </div>
 </template>
 

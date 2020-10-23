@@ -44,7 +44,15 @@
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <router-link class="espace" to="/register">No account yet ? Sign up</router-link>
+          <router-link class="espace" to="/register"
+            >No account yet ? Sign up</router-link
+          >
+          <!-- <md-button
+            @click="go"
+            class="md-raised md-primary"
+            :disabled="sending"
+            >Sign in</md-button
+          > -->
           <md-button
             type="submit"
             class="md-raised md-primary"
@@ -53,10 +61,6 @@
           >
         </md-card-actions>
       </md-card>
-
-      <md-snackbar :md-active.sync="userSaved"
-        >The user {{ lastUser }} was saved with success!</md-snackbar
-      >
     </form>
   </div>
 </template>
@@ -74,9 +78,7 @@ export default {
       username: null,
       password: null,
     },
-    userSaved: false,
     sending: false,
-    lastUser: null,
   }),
   validations: {
     form: {
@@ -89,6 +91,9 @@ export default {
     },
   },
   methods: {
+    go() {
+      this.$router.push("dashboard");
+    },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -104,22 +109,24 @@ export default {
       this.form.email = null;
     },
     saveUser() {
+      console.log("clic");
       this.sending = true;
-
-      Axios.post("http://localhost:4000/api/users/", {
+      this.$router.push("dashboard");
+      Axios.post("http://localhost:4000/api/login/", {
         user: {
           username: this.form.username,
-          email: this.form.email,
+          password: this.form.password,
         },
       })
-        .then((response) => (this.lastUser = response.data))
+        .then((response) => {
+          console.log(response)
+          // check user, jwt, redirect
+        })
         .catch((error) => {
           console.log(error);
         });
-      // Instead of this timeout, here you can call your API
+
       window.setTimeout(() => {
-        this.lastUser = `${this.form.username} ${this.form.email}`;
-        this.userSaved = true;
         this.sending = false;
         this.clearForm();
       }, 1500);
@@ -147,6 +154,6 @@ export default {
   margin-right: auto;
 }
 .espace {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 </style>
