@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\config",
+    "\\lib",
+    "\\lib\\api",
+    "\\priv",
+    "\\test"
+  ],
+  "SelectedNode": "\\lib\\api\\application.ex",
+  "PreviewInSolutionExplorer": false
+}
