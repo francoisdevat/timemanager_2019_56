@@ -1,5 +1,5 @@
 <template>
-  <div id="maliste" class="page-container md-layout-column">
+  <div class="page-container md-layout-column">
     <md-toolbar class="md-primary">
       <md-button class="md-icon-button" @click="showNavigation = true">
         <md-icon>menu</md-icon>
@@ -54,6 +54,12 @@
             ><span class="md-list-item-text">Login</span></router-link
           >
         </md-list-item>
+        <md-list-item>
+          <md-icon>error</md-icon>
+          <router-link to="/graph"
+            ><span class="md-list-item-text">Bar Chart</span></router-link
+          >
+        </md-list-item>
       </md-list>
     </md-drawer>
 
@@ -68,7 +74,6 @@
 <script>
 export default {
   name: "App",
-  components: {},
   data: () => ({
     showNavigation: false,
     showSidepanel: false,
@@ -99,8 +104,5 @@ export default {
 .md-content {
   padding: 16px;
 }
-#maliste {
-  /* justify-content: start; */
-  /* background-color: red; */
-}
+
 </style>
