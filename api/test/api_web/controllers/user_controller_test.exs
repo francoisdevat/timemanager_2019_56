@@ -1,21 +1,29 @@
-defmodule TodolistWeb.UserControllerTest do
-  use TodolistWeb.ConnCase
+defmodule GothamWeb.UserControllerTest do
+  use GothamWeb.ConnCase
 
-  alias Todolist.Account
-  alias Todolist.Account.User
+  alias Gotham.Accounts
+  alias Gotham.Accounts.User
 
   @create_attrs %{
-    firstName: "some firstName",
-    lastName: "some lastName"
+    email: "some email",
+    firstname: "some firstname",
+    lastname: "some lastname",
+    password_hash: "some password_hash",
+    status: true,
+    type: "some type"
   }
   @update_attrs %{
-    firstName: "some updated firstName",
-    lastName: "some updated lastName"
+    email: "some updated email",
+    firstname: "some updated firstname",
+    lastname: "some updated lastname",
+    password_hash: "some updated password_hash",
+    status: false,
+    type: "some updated type"
   }
-  @invalid_attrs %{firstName: nil, lastName: nil}
+  @invalid_attrs %{email: nil, firstname: nil, lastname: nil, password_hash: nil, status: nil, type: nil}
 
   def fixture(:user) do
-    {:ok, user} = Account.create_user(@create_attrs)
+    {:ok, user} = Accounts.create_user(@create_attrs)
     user
   end
 
@@ -39,8 +47,12 @@ defmodule TodolistWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "firstName" => "some firstName",
-               "lastName" => "some lastName"
+               "email" => "some email",
+               "firstname" => "some firstname",
+               "lastname" => "some lastname",
+               "password_hash" => "some password_hash",
+               "status" => true,
+               "type" => "some type"
              } = json_response(conn, 200)["data"]
     end
 
@@ -61,8 +73,12 @@ defmodule TodolistWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "firstName" => "some updated firstName",
-               "lastName" => "some updated lastName"
+               "email" => "some updated email",
+               "firstname" => "some updated firstname",
+               "lastname" => "some updated lastname",
+               "password_hash" => "some updated password_hash",
+               "status" => false,
+               "type" => "some updated type"
              } = json_response(conn, 200)["data"]
     end
 

@@ -109,9 +109,7 @@ export default {
       this.form.email = null;
     },
     saveUser() {
-      console.log("clic");
       this.sending = true;
-      this.$router.push("dashboard");
       Axios.post("http://localhost:4000/api/login/", {
         user: {
           username: this.form.username,
@@ -119,7 +117,10 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response)
+          console.log(response);
+          if (response.status === 200) {
+            this.$router.push("dashboard");
+          }
           // check user, jwt, redirect
         })
         .catch((error) => {

@@ -8,16 +8,17 @@
 use Mix.Config
 
 config :api,
-  namespace: Todolist,
-  ecto_repos: [Todolist.Repo]
+  namespace: Gotham,
+  ecto_repos: [Gotham.Repo],
+  generators: [binary_id: true]
 
 # Configures the endpoint
-config :api, TodolistWeb.Endpoint,
+config :api, GothamWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "/NA0QDv4XO6rE10vi+16fsiiqypDiehOhtTahx2aLh+2SlPRnm785gxSPB2BF/cu",
-  render_errors: [view: TodolistWeb.ErrorView, accepts: ~w(json), layout: false],
-  pubsub_server: Todolist.PubSub,
-  live_view: [signing_salt: "S4gklnFC"]
+  secret_key_base: "nIUzRAQJr2upkJMvr66ePoYHSCQmK3X014RnTQoVPopeMGaOSnbZ1uZHgIYob63P",
+  render_errors: [view: GothamWeb.ErrorView, accepts: ~w(json), layout: false],
+  pubsub_server: Gotham.PubSub,
+  live_view: [signing_salt: "kiGt6tSM"]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -26,6 +27,10 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :myApi, MyApi.Guardian,
+ issuer: "Gotham",
+ secret_key: "Secret key. Use `mix guardian.gen.secret` to generate one"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

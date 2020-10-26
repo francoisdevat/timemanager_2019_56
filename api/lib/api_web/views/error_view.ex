@@ -1,5 +1,5 @@
-defmodule TodolistWeb.ErrorView do
-  use TodolistWeb, :view
+defmodule GothamWeb.ErrorView do
+  use GothamWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

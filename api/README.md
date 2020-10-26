@@ -1,4 +1,4 @@
-# Todolist
+# Gotham
 
 To start your Phoenix server:
 

@@ -1,4 +1,4 @@
-defmodule TodolistWeb.Telemetry do
+defmodule GothamWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -49,7 +49,7 @@ defmodule TodolistWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {TodolistWeb, :count_users, []}
+      # {GothamWeb, :count_users, []}
     ]
   end
 end

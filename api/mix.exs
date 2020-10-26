@@ -1,4 +1,4 @@
-defmodule Todolist.MixProject do
+defmodule Gotham.MixProject do
   use Mix.Project
 
   def project do
@@ -19,7 +19,7 @@ defmodule Todolist.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Todolist.Application, []},
+      mod: {Gotham.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -42,7 +42,11 @@ defmodule Todolist.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:cors_plug, "~> 2.0"},
+      {:comeonin, "~> 5.3.1"},
+      {:pbkdf2_elixir, "~> 1.0"},
+      {:guardian, "~> 2.0"}
     ]
   end
 
