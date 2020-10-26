@@ -11,11 +11,13 @@ defmodule GothamWeb.Router do
     resources "/users", UserController, only: [:index, :show, :create, :update, :delete]
     options "/users", UserController, :options
     options "/users/:id", UserController, :options
+    post "/login", UserController, :verify_user
+    options "/login", UserController, :options
     resources "/teams", TeamController, only: [:index, :show, :create, :update, :delete]
     options "/teams", TeamController, :options
     options "/teams/:id", TeamController, :options
-    resources "/clocks", ClockController, only: [:index, :create, :update, :delete]
-    get "/clocks/:team_id", ClockController, :clockbyteamid
+    resources "/clocks", ClockController, only: [:index, :show, :create, :update, :delete]
+    # get "/clocks/:team_id", ClockController, :clockbyteamid
     options "/clocks", ClockController, :options
     options "/clocks/:id", ClockController, :options
     options "/clocks/u/:team_id", ClockController, :options

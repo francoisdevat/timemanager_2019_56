@@ -159,8 +159,13 @@ export default {
 
       Axios.post("http://localhost:4000/api/users/", {
         user: {
-          username: this.form.username,
           email: this.form.email,
+          firstname: this.form.firstname,
+          lastname: this.form.lastname,
+          password: this.form.password,
+          status: true,
+          type: "Employee",
+          team_id: "4ebbed0b-3681-43ee-9db6-719156ed9d94"
         },
       })
         .then((response) => (this.lastUser = response.data))

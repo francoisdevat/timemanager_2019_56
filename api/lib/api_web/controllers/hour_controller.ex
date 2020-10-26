@@ -26,8 +26,13 @@ defmodule GothamWeb.HourController do
   end
 
   def hourbytime(conn, %{"start" => start, "end" => endtime}) do
-    hour = Times.get_hourbytime!(start, endtime)
-    render(conn, "show.json", hour: hour)
+    if start do
+      hour = Times.get_hourbytime!(start, endtime)
+      render(conn, "show.json", hour: hour)
+    else
+      hours = Times.list_hours()
+      render(conn, "index.json", hours: hours)
+    end
   end
 
   def update(conn, %{"id" => id, "hour" => hour_params}) do

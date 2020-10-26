@@ -18,10 +18,11 @@ defmodule GothamWeb.UserView do
       password_hash: user.password_hash,
       status: user.status,
       team_id: user.team_id,
-      type: user.type}
+      type: user.type,
+      team: user.team.name}
   end
 
-    def render("jwt.json", %{jwt: jwt}) do
+  def render("jwt.json", %{jwt: jwt}) do
     %{jwt: jwt}
   end
   

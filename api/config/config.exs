@@ -28,7 +28,7 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :myApi, MyApi.Guardian,
+config :api, Gotham.Guardian,
  issuer: "Gotham",
  secret_key: "Secret key. Use `mix guardian.gen.secret` to generate one"
 
