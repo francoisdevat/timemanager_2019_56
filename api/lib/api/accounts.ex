@@ -7,6 +7,7 @@ defmodule Gotham.Accounts do
   alias Gotham.Repo
 
   alias Gotham.Accounts.User
+  alias Gotham.Partners.Team
 
   @doc """
   Returns the list of users.
@@ -19,6 +20,7 @@ defmodule Gotham.Accounts do
   """
   def list_users do
     Repo.all(User)
+    |> Repo.preload(:team)
   end
 
   @doc """
@@ -35,8 +37,15 @@ defmodule Gotham.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload(:team)
+  end
 
+  def login!(email) do
+    Repo.get_by!(User, email: email)
+    |> Repo.preload(:team)
+  end
   @doc """
   Creates a user.
 
@@ -53,6 +62,7 @@ defmodule Gotham.Accounts do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    |> Repo.preload([:team, :clock, :hour])
   end
 
   @doc """

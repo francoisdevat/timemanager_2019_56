@@ -1,6 +1,7 @@
 defmodule Gotham.Guardian do
-  use Guardian, otp_app: :Gotham
+  use Guardian
 
+  # Ajoute le user ID au sub du token
   def subject_for_token(user, _claims) do
     sub = to_string(user.id)
     {:ok, sub}
@@ -10,6 +11,7 @@ defmodule Gotham.Guardian do
     {:error, :reason_for_error}
   end
 
+  # Récupère le user grâce au user ID dans le sub
   def resource_from_claims(claims) do
     id = claims["sub"]
     resource = Gotham.Accounts.get_user!(id)

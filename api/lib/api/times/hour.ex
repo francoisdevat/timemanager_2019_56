@@ -14,7 +14,7 @@ defmodule Gotham.Times.Hour do
   @doc false
   def changeset(hour, attrs) do
     hour
-    |> cast(attrs, [:start, :end])
+    |> cast(attrs, [:start, :end, :user_id])
     |> validate_required([:start, :end])
   end
 end

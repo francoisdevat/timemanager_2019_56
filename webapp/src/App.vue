@@ -85,6 +85,7 @@ export default {
     showSidepanel: false,
     logout: true,
     username: null,
+    user: null
   }),
   methods: {
     signout: function() {
@@ -93,8 +94,9 @@ export default {
     },
   },
   async mounted() {
-    await Axios.get("http://localhost:4000/api/users/1").then((response) => {
+    await Axios.get("http://localhost:4000/api/users/18c803dc-0e42-42dd-b127-2afdc8fea23d").then((response) => {
       this.username = response.data.data.username;
+      this.user = response.data.data
     });
   },
 };

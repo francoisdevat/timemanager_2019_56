@@ -3,7 +3,9 @@ use Mix.Config
 # Configure your database
 config :api, Gotham.Repo,
   username: "postgres",
+<<<<<<< Updated upstream
   password: "postgres",
+>>>>>>> Stashed changes
   database: "api_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
