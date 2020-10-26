@@ -1,7 +1,7 @@
 use Mix.Config
 
 # Configure your database
-config :api, Todolist.Repo,
+config :api, Gotham.Repo,
   username: "postgres",
   password: "postgres",
   database: "api_dev",
@@ -15,7 +15,7 @@ config :api, Todolist.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :api, TodolistWeb.Endpoint,
+config :api, GothamWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
