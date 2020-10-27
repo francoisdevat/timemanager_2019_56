@@ -62,6 +62,9 @@
         </md-card-actions>
       </md-card>
     </form>
+    <md-snackbar :md-active.sync="unauthorized"
+      >The email or password is incorrect</md-snackbar
+    >
   </div>
 </template>
 
@@ -74,6 +77,7 @@ export default {
   name: "User",
   mixins: [validationMixin],
   data: () => ({
+    unauthorized: false,
     form: {
       email: null,
       password: null,
@@ -84,7 +88,7 @@ export default {
     form: {
       email: {
         required,
-        email
+        email,
       },
       password: {
         required,
@@ -116,11 +120,13 @@ export default {
           password: this.form.password,
       })
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
             this.$router.push("dashboard");
+            // handle jwt 
+          } 
+          if (response.status === 401) {
+            this.unauthorized = true;
           }
-          // check user, jwt, redirect
         })
         .catch((error) => {
           console.log(error);

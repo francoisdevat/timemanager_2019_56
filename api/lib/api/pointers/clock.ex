@@ -11,12 +11,13 @@ defmodule Gotham.Pointers.Clock do
     field :time, :naive_datetime
     belongs_to :user, User, foreign_key: :user_id
     belongs_to :team, Team, foreign_key: :team_id
+    timestamps()
   end
 
   @doc false
   def changeset(clock, attrs) do
     clock
-    |> cast(attrs, [:time, :status])
+    |> cast(attrs, [:time, :status, :user_id, :team_id])
     |> validate_required([:time, :status])
   end
 end
