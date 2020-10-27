@@ -19,6 +19,12 @@
                   v-model="form.email"
                   :disabled="sending"
                 />
+                <span class="md-error" v-if="!$v.form.email.required"
+                  >The email is required</span
+                >
+                <span class="md-error" v-else-if="!$v.form.email"
+                  >Invalid email</span
+                >
               </md-field>
             </div>
           </div>
@@ -47,12 +53,6 @@
           <router-link class="espace" to="/register"
             >No account yet ? Sign up</router-link
           >
-          <!-- <md-button
-            @click="go"
-            class="md-raised md-primary"
-            :disabled="sending"
-            >Sign in</md-button
-          > -->
           <md-button
             type="submit"
             class="md-raised md-primary"
@@ -67,7 +67,7 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import { required, email } from "vuelidate/lib/validators";
 import Axios from "axios";
 
 export default {
@@ -75,15 +75,16 @@ export default {
   mixins: [validationMixin],
   data: () => ({
     form: {
-      username: null,
+      email: null,
       password: null,
     },
     sending: false,
   }),
   validations: {
     form: {
-      username: {
+      email: {
         required,
+        email
       },
       password: {
         required,
@@ -105,16 +106,14 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.form.username = null;
       this.form.email = null;
+      this.form.password = null;
     },
     saveUser() {
       this.sending = true;
-      Axios.post("http://localhost:4000/api/login/", {
-        user: {
-          username: this.form.username,
+      Axios.post("http://localhost:4000/api/login", {
+          email: this.form.email,
           password: this.form.password,
-        },
       })
         .then((response) => {
           console.log(response);

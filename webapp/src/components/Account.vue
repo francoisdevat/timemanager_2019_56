@@ -3,8 +3,8 @@
     <form novalidate class="md-layout" @submit.prevent="validateUser">
       <md-card class="md-layout-item md-size-50 md-small-size-100 formulaire">
         <md-card-header>
-          <div class="md-title">
-            Hello {{ username }} ! <md-icon>pan_tool</md-icon>
+          <div class="md-title" v-if="user">
+            Hello {{ user.firstname + " " + user.lastname }} ! <md-icon>pan_tool</md-icon>
           </div>
         </md-card-header>
 
@@ -119,7 +119,7 @@ export default {
     editing: true,
     sending: false,
     lastUser: null,
-    username: null,
+    user: null,
   }),
   validations: {
     form: {
@@ -167,9 +167,8 @@ export default {
     saveUser() {
       this.sending = true;
 
-      Axios.put("http://localhost:4000/api/users/1", {
+      Axios.put("http://localhost:4000/api/users/", {
         user: {
-          username: this.form.username,
           email: this.form.email,
         },
       })
@@ -193,12 +192,9 @@ export default {
     },
   },
   async mounted() {
-    await Axios.get("http://localhost:4000/api/users/1").then(
+    await Axios.get("http://localhost:4000/api/users/366c1284-1aca-49d0-8dee-8c78aef1c2a4").then(
       (response) => {
-        this.username = response.data.data.username;
-        this.form.email = response.data.data.email;
-        console.log(response);
-        console.log(response.data.data);
+        this.user = response.data.data;
       }
     );
   },
