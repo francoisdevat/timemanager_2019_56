@@ -6,7 +6,7 @@
       </md-button>
       <span class="md-title">Gotham City Hall</span>
       <div v-if="!logout" class="md-toolbar-section-end">
-        <md-button>{{ username }}</md-button>
+        <md-button>{{ user.firstname + " " + user.lastname }}</md-button>
         <md-button>General Manager</md-button>
         <md-button>Team Epitech</md-button>
       </div>
@@ -84,8 +84,7 @@ export default {
     showNavigation: false,
     showSidepanel: false,
     logout: true,
-    username: null,
-    user: null
+    user: null,
   }),
   methods: {
     signout: function() {
@@ -93,12 +92,13 @@ export default {
       this.logout = true;
     },
   },
-  // async mounted() {
-  //   await Axios.get("http://localhost:4000/api/users/18c803dc-0e42-42dd-b127-2afdc8fea23d").then((response) => {
-  //     this.username = response.data.data.username;
-  //     this.user = response.data.data
-  //   });
-  // },
+  async mounted() {
+    await Axios.get(
+      "http://localhost:4000/api/users/366c1284-1aca-49d0-8dee-8c78aef1c2a4"
+    ).then((response) => {
+      this.user = response.data.data;
+    });
+  },
 };
 </script>
 

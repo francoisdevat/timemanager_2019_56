@@ -115,7 +115,7 @@ export default {
     },
     saveUser() {
       this.sending = true;
-      Axios.post("http://localhost:4000/api/login/", {
+      Axios.post("http://localhost:4000/api/login", {
           email: this.form.email,
           password: this.form.password,
       })
