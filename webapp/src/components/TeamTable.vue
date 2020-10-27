@@ -6,18 +6,19 @@
           <md-table-head class="colum-container" >Type</md-table-head>
           <md-table-head class="colum-container" >Team</md-table-head>
       </md-table-row>
-
-      <md-table-row v-for="info in infos" :key="info.id">
-          <md-table-cell class="colum-container" >{{info.firstname}} {{info.lastname}}</md-table-cell>
-          <md-table-cell class="colum-container" >{{info.type}}</md-table-cell>
-          <md-table-cell class="colum-container" ><md-field>
-             <label for="team">{{info.team}}</label>
+      <!-- <md-table-row v-for="(info, info.status) in infos" v-if="info.status=true" > -->
+      
+      <md-table-row v-for="info in infos" :key="info.id" >
+          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" >{{info.firstname}} {{info.lastname}}</md-table-cell>
+          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" >{{info.type}}</md-table-cell>
+          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" ><md-field>
+            <label v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" for="team">{{info.team}}</label>
                 <md-select class="team" name="team" id="team">
-                     <md-option v-for="team in teams" :key="team.id" value="team" class="colum-container" >{{team.name}}</md-option>
+                    <md-option v-for="team in teams" :key="team.id" value="team" class="colum-container" >{{team.name}}</md-option>
                 </md-select>
               </md-field>
           </md-table-cell>
-          <md-table-cell class="colum-container" ><button v-on:click="updateFalse(info)" class="btn-icon-corbeille" ><md-icon class="icon-corbeille">delete</md-icon></button></md-table-cell>
+          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" ><button @click="(updateFalse(info), isInactive.includes(info.id) ? isInactive.splice(isInactive.indexOf(info.id), 1) : isInactive.push(info.id))" class="btn-icon-corbeille" ><md-icon class="icon-corbeille">delete</md-icon></button></md-table-cell>
       </md-table-row>
     </md-table>
   </div>
@@ -25,6 +26,15 @@
 
 <script>
 import Axios from "axios"
+
+var infos = []
+for (var i = 1; i <= 10; i++) {
+  infos.push({
+
+    id: i
+  })
+}
+
   export default {
     name: 'TeamTable',
     data: () => ({
@@ -37,6 +47,7 @@ import Axios from "axios"
       id: null,
       type:null,
       teams: null,
+      isInactive: [],
     }),
 
     methods : {
@@ -58,6 +69,7 @@ import Axios from "axios"
             })
             .then(function (response) {
               console.log(response);
+
             })
             .catch(function (error) {
               console.log(error);
@@ -67,7 +79,7 @@ import Axios from "axios"
           }
 
         },
-
+        // fonction qui remet le "status" d'un user en true pour l'afficher dans la liste nécéssite la tab de l'user
         updateTrue: function (info) {
           const id= info.id
           try {
@@ -100,7 +112,11 @@ import Axios from "axios"
     mounted () {
       Axios
         .get('http://localhost:4000/api/users')
-        .then(response => (this.infos = response.data.data))
+        .then(response => {
+            this.infos = response.data.data
+            console.log(response.data.data)
+        })
+
 
       Axios
         .get('http://localhost:4000/api/teams')
@@ -157,6 +173,10 @@ import Axios from "axios"
 }
 
 .md-menu.md-select:not(.md-disabled) .md-icon{
+  display: none;
+}
+
+.active {
   display: none;
 }
 
