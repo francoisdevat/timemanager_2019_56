@@ -1,25 +1,30 @@
 <template>
   <div class="content">
     <div class="container">
-      <div class="Search__container">
+      <!-- <div class="Search__container">
         <input
           class="Search__input"
           @keyup.enter="requestData"
           placeholder="npm package name"
           type="search"
           name="search"
-          v-model="package"
+          v-model="packages"
         />
         <button class="Search__button" @click="requestData">Find</button>
-      </div>
-      <div class="error-message" v-if="showError">
+      </div> -->
+      <!-- <div class="error-message" v-if="showError">
         {{ errorMessage }}
       </div>
       <hr />
-      <h1 class="title" v-if="loaded">{{ packageName }}</h1>
+      <h1 class="title" v-if="loaded">{{ packageName }}</h1> -->
+      <div>
+        <md-datepicker v-model="selectedDate">
+          <label>Select date</label>
+        </md-datepicker>
+      </div>
       <div class="Chart__container" v-if="loaded">
         <div class="Chart__title">
-          Downloads per Day <span>{{ period }}</span>
+          Working time
           <hr />
         </div>
         <div class="Chart__content">
@@ -28,6 +33,11 @@
             :chart-data="downloads"
             :chart-labels="labels"
           ></line-chart>
+          <!-- <bar-chart
+            v-if="loaded"
+            :chart-data="downloads"
+            :chart-labels="labels"
+          ></bar-chart> -->
         </div>
       </div>
     </div>
@@ -35,15 +45,19 @@
 </template>
 <script>
 import axios from "axios";
+// import BarChart from "./LineChart";
 import LineChart from "./LineChart";
+const moment = require("moment");
 export default {
   components: {
-    LineChart,
+    // BarChart,
+    LineChart
   },
   props: {},
   data() {
     return {
-      package: null,
+      selectedDate: null,
+      packages: null,
       packageName: "",
       period: "last-month",
       loaded: false,
@@ -51,11 +65,15 @@ export default {
       labels: [],
       showError: false,
       errorMessage: "Please enter a package name",
+      starttime: null,
+      endtime: null,
     };
   },
   mounted() {
-    if (this.$route.params.package) {
-      this.package = this.$route.params.package;
+    if (this.$route.params.start) {
+      this.starttime = this.$route.params.start;
+      this.endtime = this.$route.params.end;
+    } else {
       this.requestData();
     }
   },
@@ -65,26 +83,30 @@ export default {
       this.showError = false;
     },
     requestData() {
-      if (
-        this.package === null ||
-        this.package === "" ||
-        this.package === "undefined"
-      ) {
-        this.showError = true;
-        return;
-      }
+      // if (
+      //   this.packages === null ||
+      //   this.packages === "" ||
+      //   this.packages === "undefined"
+      // ) {
+      //   this.showError = true;
+      //   return;
+      // }
       this.resetState();
       axios
         .get(
-          `https://api.npmjs.org/downloads/range/${this.period}/${this.package}`
+          // `https://api.npmjs.org/downloads/range/${this.period}/${this.packages}`
+          "http://localhost:4000/api/hours"
         )
         .then((response) => {
-          console.log(response.data);
-          this.downloads = response.data.downloads.map(
-            (download) => download.downloads
+          console.log(response.data.data);
+          this.downloads = response.data.data.map(
+            (time) =>
+              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
           );
-          this.labels = response.data.downloads.map((download) => download.day);
-          this.packageName = response.data.package;
+          this.labels = response.data.data.map((hour) =>
+            moment(hour.end).format("DD MM YYYY")
+          );
+          // this.packageName = response.data.package;
           this.setURL();
           this.loaded = true;
         })
@@ -95,9 +117,9 @@ export default {
     },
     setURL() {
       history.pushState(
-        { info: `npm-stats ${this.package}` },
-        this.package,
-        `/#/${this.package}`
+        { info: `npm-stats ${this.packages}` },
+        this.packages,
+        `/#/${this.packages}`
       );
     },
   },

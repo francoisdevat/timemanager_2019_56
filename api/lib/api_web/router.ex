@@ -22,7 +22,7 @@ defmodule GothamWeb.Router do
     options "/clocks/:id", ClockController, :options
     options "/clocks/u/:team_id", ClockController, :options
     resources "/hours", HourController, only: [:index, :show, :create, :update, :delete]
-    # get "/hours", HourController, :hourbytime
+    get "/hour", HourController, :hourbytime
     options "/hours", HourController, :options
     options "/hours/:id", HourController, :options
   end

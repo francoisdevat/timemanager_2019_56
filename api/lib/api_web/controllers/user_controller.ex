@@ -4,7 +4,7 @@ defmodule GothamWeb.UserController do
   alias Gotham.Accounts
   alias Gotham.Accounts.User
   alias Gotham.Guardian
-
+  require Logger 
   action_fallback GothamWeb.FallbackController
 
   def index(conn, _params) do
@@ -76,4 +76,17 @@ defmodule GothamWeb.UserController do
         {:error, :unauthorized}
     end
   end
+
+  def login(conn, %{"email" => email, "password" => password}) do
+  # case User.find_and_confirm_password(params) do
+  case Accounts.login!(email) do
+    {:ok, user} ->
+       conn
+       |> Guardian.Plug.sign_in(user)
+       |> redirect(to: "/dashboard")
+    {:error, changeset} ->
+      {:error, :unauthorized}
+  end
+end
+  
 end

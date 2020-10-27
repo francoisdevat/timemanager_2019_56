@@ -9,7 +9,7 @@ defmodule Gotham.Accounts do
   alias Gotham.Accounts.User
   alias Gotham.Partners.Team
   alias Gotham.Guardian
-
+ require Logger
   @doc """
   Returns the list of users.
 
@@ -124,12 +124,12 @@ defmodule Gotham.Accounts do
     end
   end
 
-  defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
+  defp email_password_auth(email, password) do
     with {:ok, user} <- get_by_email(email),
     do: verify_password(password, user)
   end
 
-  defp get_by_email(email) when is_binary(email) do
+  defp get_by_email(email) do
     case Repo.get_by(User, email: email) do
       nil ->
         {:error, "Login error."}
@@ -138,7 +138,7 @@ defmodule Gotham.Accounts do
     end
   end
 
-  defp verify_password(password, %User{} = user) when is_binary(password) do
+  defp verify_password(password, %User{} = user) do
     if Pbkdf2.verify_pass(password, user.password_hash) do
       {:ok, user}
     else
