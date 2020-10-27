@@ -194,7 +194,7 @@ export default {
   async mounted() {
     await Axios.get("http://localhost:4000/api/users/366c1284-1aca-49d0-8dee-8c78aef1c2a4").then(
       (response) => {
-        this.user = response.data.data;
+        this.user = response.data;
       }
     );
   },

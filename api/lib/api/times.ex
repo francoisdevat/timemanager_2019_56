@@ -18,7 +18,9 @@ defmodule Gotham.Times do
 
   """
   def list_hours do
-    Repo.all(Hour)
+    # Repo.all(Hour)
+    Repo.all(from h in Hour,
+    order_by: h.end)
   end
 
   @doc """

@@ -4,7 +4,7 @@ defmodule GothamWeb.UserController do
   alias Gotham.Accounts
   alias Gotham.Accounts.User
   alias Gotham.Guardian
-
+  require Logger 
   action_fallback GothamWeb.FallbackController
 
   def index(conn, _params) do
@@ -29,7 +29,7 @@ defmodule GothamWeb.UserController do
   # end
 
   def verify_user(conn, %{"email" => email, "password" => password}) do
-    user = Accounts.login!(email, password) 
+    user = Accounts.login!(email) 
     if Pbkdf2.verify_pass(password, user.password_hash) do
       render(conn, "show.json", user: user)
     else 
@@ -65,4 +65,28 @@ defmodule GothamWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  ####################
+
+  def sign_in(conn, %{"email" => email, "password" => password}) do
+    case Accounts.token_sign_in(email, password) do
+      {:ok, token, _claims} ->
+        conn |> render("jwt.json", jwt: token)
+      _ ->
+        {:error, :unauthorized}
+    end
+  end
+
+  def login(conn, %{"email" => email, "password" => password}) do
+  # case User.find_and_confirm_password(params) do
+  case Accounts.login!(email) do
+    {:ok, user} ->
+       conn
+       |> Guardian.Plug.sign_in(user)
+       |> redirect(to: "/dashboard")
+    {:error, changeset} ->
+      {:error, :unauthorized}
+  end
+end
+  
 end

@@ -3,7 +3,7 @@ defmodule GothamWeb.HourController do
 
   alias Gotham.Times
   alias Gotham.Times.Hour
-
+require Logger
   action_fallback GothamWeb.FallbackController
 
   def index(conn, _params) do
@@ -26,13 +26,8 @@ defmodule GothamWeb.HourController do
   end
 
   def hourbytime(conn, %{"start" => start, "end" => endtime}) do
-    if start do
       hour = Times.get_hourbytime!(start, endtime)
       render(conn, "show.json", hour: hour)
-    else
-      hours = Times.list_hours()
-      render(conn, "index.json", hours: hours)
-    end
   end
 
   def update(conn, %{"id" => id, "hour" => hour_params}) do

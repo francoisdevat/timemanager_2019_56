@@ -15,18 +15,25 @@
         {{ selectedDate | moment("MM/DD/YYYY hh:mm") }}</md-content
       >
     </div>
-    <div class="test"><Graph /> <Graph /></div>
-    <div class="test"><Graph /> <Graph /></div>
+    <div class="md-layout">
+      <div class="md-layout-item">
+          <Chart />
+      </div>
+      <div class="md-layout-item"><TeamTable /></div>
+    </div>
   </div>
 </template>
 
 <script>
 // import Axios from "axios";
-import Graph from "./Graph";
+import Chart from "./Chart"
+import TeamTable from "./TeamTable";
+
 const moment = require("moment");
 export default {
   components: {
-    Graph,
+    Chart,
+    TeamTable,
   },
   name: "Dashboard",
   data: () => ({

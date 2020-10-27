@@ -30,7 +30,7 @@ config :phoenix, :json_library, Jason
 
 config :api, Gotham.Guardian,
  issuer: "Gotham",
- secret_key: "Secret key. Use `mix guardian.gen.secret` to generate one"
+ secret_key: "uH9hqeesF3wSTWfMuQDeok6+AYJib3eZC/o+bXEv5WMwd9hDEIO0GqsXHPfoVC5I"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
