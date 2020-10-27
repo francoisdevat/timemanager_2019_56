@@ -1,6 +1,6 @@
 <template>
   <div class="page-container md-layout-column">
-    <md-toolbar class="md-primary">
+    <md-toolbar v-if="user" class="md-primary">
       <md-button class="md-icon-button" @click="showNavigation = true">
         <md-icon>menu</md-icon>
       </md-button>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-// import Axios from "axios";
+import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
@@ -94,9 +94,9 @@ export default {
   },
   async mounted() {
     await Axios.get(
-      "http://localhost:4000/api/users/366c1284-1aca-49d0-8dee-8c78aef1c2a4"
+      "http://localhost:4000/api/users/f10053d7-7272-40ac-9d5b-8f78aeb7d8c7"
     ).then((response) => {
-      this.user = response.data.data;
+      this.user = response.data;
     });
   },
 };

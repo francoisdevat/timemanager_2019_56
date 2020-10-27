@@ -7,7 +7,7 @@ defmodule Gotham.Partners.Team do
   schema "teams" do
     field :name, :string
     has_many :user, Gotham.Accounts.User
-    has_many :hour, Gotham.Times.Hour
+    has_many :clock, Gotham.Pointers.Clock
     timestamps()
   end
 
