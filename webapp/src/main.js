@@ -12,6 +12,7 @@ import VueMoment from "vue-moment";
 import Login from "./components/Login";
 import Account from "./components/Account";
 import Dashboard from "./components/Dashboard";
+import TeamTable from "./components/TeamTable";
 // import store from './store';
 
 Vue.use(VueMoment);
@@ -27,6 +28,7 @@ const routes = [
   { path: "/login", component: Login },
   { path: "/account", component: Account },
   { path: "/dashboard", component: Dashboard },
+  { path: "/teamtable", component: TeamTable },
 ];
 
 const router = new VueRouter({
