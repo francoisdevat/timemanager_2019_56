@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import Axios from "axios";
+// import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
@@ -93,12 +93,12 @@ export default {
       this.logout = true;
     },
   },
-  async mounted() {
-    await Axios.get("http://localhost:4000/api/users/18c803dc-0e42-42dd-b127-2afdc8fea23d").then((response) => {
-      this.username = response.data.data.username;
-      this.user = response.data.data
-    });
-  },
+  // async mounted() {
+  //   await Axios.get("http://localhost:4000/api/users/18c803dc-0e42-42dd-b127-2afdc8fea23d").then((response) => {
+  //     this.username = response.data.data.username;
+  //     this.user = response.data.data
+  //   });
+  // },
 };
 </script>
 

@@ -1,26 +1,25 @@
 <template>
   <div id="team-table">
-    <md-table>
+    <md-table v-if="infos">
       <md-table-row>
           <md-table-head class="colum-container" >Name</md-table-head>
           <md-table-head class="colum-container" >Type</md-table-head>
           <md-table-head class="colum-container" >Team</md-table-head>
       </md-table-row>
 
-      <md-table-row v-for="info in infos.data" :key="info.id">
-          <md-table-cell class="colum-container" >{{info.firstName}} {{info.lastName}}</md-table-cell>
-          <md-table-cell class="colum-container" >Employee</md-table-cell>
+      <md-table-row v-for="info in infos" :key="info.id">
+          <md-table-cell class="colum-container" >{{info.firstname}} {{info.lastname}}</md-table-cell>
+          <md-table-cell class="colum-container" >{{info.type}}</md-table-cell>
           <md-table-cell class="colum-container" ><md-field>
-             <label for="team">Team2</label>
-                <md-select class="test" name="team" id="team">
-                    <md-option v-for="team in teams" :key="team.id" value="team" class="colum-container" >{{team}}</md-option>
+             <label for="team">{{info.team}}</label>
+                <md-select class="team" name="team" id="team">
+                     <md-option v-for="team in teams" :key="team.id" value="team" class="colum-container" >{{team.name}}</md-option>
                 </md-select>
               </md-field>
           </md-table-cell>
-          <md-table-cell class="colum-container" ><md-icon>delete</md-icon></md-table-cell>
+          <md-table-cell class="colum-container" ><button v-on:click="updateFalse(info)" class="btn-icon-corbeille" ><md-icon class="icon-corbeille">delete</md-icon></button></md-table-cell>
       </md-table-row>
     </md-table>
-    <div>{{infos.data[0].type}}</div>
   </div>
 </template>
 
@@ -30,16 +29,82 @@ import Axios from "axios"
     name: 'TeamTable',
     data: () => ({
       infos: null,
-      name: null,
       email: null,
-      types: [{"id":1, "name":"test1"}, {"id":2, "name":"toto"}],
-      teams: ["Joker", "Joker", "Joker", "Joker", "Joker"]
+      firstname: null,
+      lastname: null,
+      status: null,
+      team: null,
+      id: null,
+      type:null,
+      teams: null,
     }),
-    method
+
+    methods : {
+        updateFalse: function (info) {
+          const id= info.id
+          try {
+          Axios
+            .put('http://localhost:4000/api/users/'+ id, {
+              user : {
+                email: info.email,
+                firstname: info.firstname,
+                lastname: info.lastname,
+                password: info.password_hash, 
+                status: false,
+                team_id: info.team_id,
+                type: info.type,
+                team: info.team
+              }
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          } catch (error) {
+            console.log(error)
+          }
+
+        },
+
+        updateTrue: function (info) {
+          const id= info.id
+          try {
+          Axios
+            .put('http://localhost:4000/api/users/'+ id, {
+              user : {
+                email: info.email,
+                firstname: info.firstname,
+                lastname: info.lastname,
+                password: info.password_hash, 
+                status: true,
+                team_id: info.team_id,
+                type: info.type,
+                team: info.team
+              }
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          } catch (error) {
+            console.log(error)
+          }
+
+        },
+    },
+
     mounted () {
       Axios
-        .get('http://localhost:4000/api/testusers')
-        .then(response => (this.infos = response.data))
+        .get('http://localhost:4000/api/users')
+        .then(response => (this.infos = response.data.data))
+
+      Axios
+        .get('http://localhost:4000/api/teams')
+        .then(response => (this.teams = response.data.data))
     }
   }
   
@@ -62,15 +127,33 @@ import Axios from "axios"
 }
 
 .md-table-head .md-table-head-container{
-    text-align: center;
+  text-align: center;
 }
 
-.md-table-cell:last-child .md-table-cell-container {
-  padding: 0;
+.md-table-cell:last-child, .md-table-cell-container, .md-content {
+  padding-right: 0;
+  padding-left: 10px;
 }
 
-.test {
+.team {
   width: 3vw;
+}
+
+.md-list-item-content {
+    min-height: 0;
+}
+
+.md-menu-content {
+    max-width: 165px;
+}
+
+.icon-corbeille:hover {
+  cursor: pointer;
+}
+
+.btn-icon-corbeille {
+  border: initial;
+  background: initial;
 }
 
 .md-menu.md-select:not(.md-disabled) .md-icon{
