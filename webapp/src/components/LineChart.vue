@@ -6,11 +6,11 @@ export default {
   extends: Line,
   props: {
     chartData: {
-      type: Object,
+      type: Array,
       required: false,
-      default: function() {
-        return {};
-      },
+      // default: function() {
+      //   return {};
+      // },
     },
     chartLabels: {
       type: Array,
@@ -53,12 +53,12 @@ export default {
         labels: this.chartLabels,
         datasets: [
           {
-            label: "downloads",
+            label: "hours worked",
             borderColor: "#249EBF",
             pointBackgroundColor: "white",
             borderWidth: 1,
             pointBorderColor: "#249EBF",
-            backgroundColor: "transparent",
+            backgroundColor: "#448AFF",
             data: this.chartData,
           },
         ],

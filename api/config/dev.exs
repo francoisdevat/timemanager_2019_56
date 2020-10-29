@@ -22,6 +22,11 @@ config :api, GothamWeb.Endpoint,
   check_origin: false,
   watchers: []
 
+
+config :api, Gotham.Guardian,
+ issuer: "Gotham",
+ secret_key: "uH9hqeesF3wSTWfMuQDeok6+AYJib3eZC/o+bXEv5WMwd9hDEIO0GqsXHPfoVC5I",
+ serializer: Gotham.GuardianSerializer
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

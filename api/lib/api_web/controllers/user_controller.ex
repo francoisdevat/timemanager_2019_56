@@ -35,19 +35,16 @@ defmodule GothamWeb.UserController do
     else 
       {:error, :unauthorized}
     end     
-    
-    # case Accounts.token_sign_in(email, password) do
-    #   {:ok, token, _claims} ->
-    #     conn |> render("jwt.json", jwt: token)
-    #   _ ->
-    #     {:error, :unauthorized}
-    # end
-
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    render(conn, "show.json", user: user)
+  # def show(conn, %{"id" => id}) do
+  #   user = Accounts.get_user!(id)
+  #   render(conn, "show.json", user: user)
+  # end
+
+  def show(conn, _params) do
+     user = Guardian.Plug.current_resource(conn)
+     conn |> render("user.json", user: user)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -76,17 +73,5 @@ defmodule GothamWeb.UserController do
         {:error, :unauthorized}
     end
   end
-
-  def login(conn, %{"email" => email, "password" => password}) do
-  # case User.find_and_confirm_password(params) do
-  case Accounts.login!(email) do
-    {:ok, user} ->
-       conn
-       |> Guardian.Plug.sign_in(user)
-       |> redirect(to: "/dashboard")
-    {:error, changeset} ->
-      {:error, :unauthorized}
-  end
-end
   
 end
