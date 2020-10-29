@@ -26,8 +26,13 @@ require Logger
   end
 
   def hourbytime(conn, %{"start" => start, "end" => endtime}) do
-      hour = Times.get_hourbytime!(start, endtime)
-      render(conn, "show.json", hour: hour)
+      hours = Times.get_hourbytime!(start, endtime)
+      render(conn, "index.json", hours: hours)
+  end
+
+  def hourbyuser(conn, %{"user_id" => user_id}) do
+    hours = Times.get_hourbyuser!(user_id)
+    render(conn, "index.json", hours: hours)
   end
 
   def update(conn, %{"id" => id, "hour" => hour_params}) do

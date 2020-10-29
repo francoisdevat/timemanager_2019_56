@@ -72,6 +72,7 @@
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import Axios from "axios";
+import { API_URL } from "./services/constants";
 
 export default {
   name: "User",
@@ -83,6 +84,7 @@ export default {
       password: null,
     },
     sending: false,
+    token: null,
   }),
   validations: {
     form: {
@@ -113,17 +115,36 @@ export default {
       this.form.email = null;
       this.form.password = null;
     },
+    login: function() {
+      this.sending = true;
+      let email = this.form.email;
+      let password = this.form.password;
+      this.$store
+        .dispatch("login", { email, password })
+        .then(() => this.$router.push("/dashboard"))
+        .catch((error) => {
+          console.log(error)
+          this.unauthorized = true;
+        });
+      this.sending = false;
+      this.clearForm();
+
+    },
+
     saveUser() {
       this.sending = true;
-      Axios.post("http://localhost:4000/api/login", {
-          email: this.form.email,
-          password: this.form.password,
+
+      Axios.post(API_URL + "/login", {
+        email: this.form.email,
+        password: this.form.password,
       })
         .then((response) => {
           if (response.status === 200) {
-            this.$router.push("dashboard");
-            // handle jwt 
-          } 
+            this.$store.commit("token", response.data.jwt);
+            localStorage.setItem("token", JSON.stringify(response.data.jwt));
+            this.token = response.data.jwt;
+            this.getUser();
+          }
           if (response.status === 401) {
             this.unauthorized = true;
           }
@@ -137,11 +158,24 @@ export default {
         this.clearForm();
       }, 1500);
     },
+    getUser() {
+      console.log(this.token);
+      Axios.get(API_URL + "/my_user", {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      }).then((response) => {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        this.$store.commit("user", response.data);
+        this.$router.push("dashboard");
+      });
+    },
     validateUser() {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        this.saveUser();
+        // this.saveUser();
+        this.login();
       }
     },
   },

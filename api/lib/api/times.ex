@@ -38,9 +38,29 @@ defmodule Gotham.Times do
 
   """
   def get_hour!(id), do: Repo.get!(Hour, id)
-  
-  def get_hourbytime!(start, endtime), do: Repo.get_by!(Hour, start: start, end: endtime)
 
+  def get_hourbyuser!(user_id) do
+   from(h in Hour,
+   where: h.user_id == ^user_id)
+   |> Repo.all
+   |> Repo.preload(:user)
+  end
+  
+  def get_hourbyteam!(team_id) do
+   from(h in Hour,
+   where: h.team_id == ^team_id)
+   |> Repo.all
+   |> Repo.preload([:user, :team])
+  end
+
+  def get_hourbytime!(start, endtime) do
+    from(h in Hour,
+    where: h.start > ^start,
+    where: h.end < ^endtime)
+    |> Repo.all
+    |> Repo.preload(:user)
+  end
+  
   @doc """
   Creates a hour.
 

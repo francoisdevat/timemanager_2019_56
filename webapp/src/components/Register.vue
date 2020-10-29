@@ -154,6 +154,26 @@ export default {
       this.form.password = null;
       this.form.email = null;
     },
+    register: function() {
+      let donnees = {
+        email: this.form.email,
+        firstname: this.form.firstname,
+        lastname: this.form.lastname,
+        password: this.form.password,
+        status: true,
+        type: "Employee",
+        team_id: "4ebbed0b-3681-43ee-9db6-719156ed9d94",
+      };
+      this.sending = true;
+      this.$store
+        .dispatch("register", donnees)
+        .then(() => this.$router.push("/dashboard"))
+        .catch((error) => {
+          console.log(error);
+          // snackbar error
+        });
+      this.clearForm();
+    },
     saveUser() {
       this.sending = true;
 
@@ -165,14 +185,13 @@ export default {
           password: this.form.password,
           status: true,
           type: "Employee",
-          team_id: "4ebbed0b-3681-43ee-9db6-719156ed9d94"
+          team_id: "4ebbed0b-3681-43ee-9db6-719156ed9d94",
         },
       })
         .then((response) => (this.lastUser = response.data))
         .catch((error) => {
           console.log(error);
         });
-      // Instead of this timeout, here you can call your API
       window.setTimeout(() => {
         this.lastUser = `${this.form.firstname} ${this.form.lastname}`;
         this.userSaved = true;
@@ -184,7 +203,8 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        this.saveUser();
+        // this.saveUser();
+        this.register();
       }
     },
   },
