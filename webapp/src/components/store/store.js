@@ -12,6 +12,9 @@ export default new Vuex.Store({
     user: {},
     teams: [],
     hours: [],
+    userhours: [],
+    teamhours: [],
+    specifichours: [],
     clocks: [],
     all_users: [],
   },
@@ -38,9 +41,21 @@ export default new Vuex.Store({
       state.status = "success";
       state.teams = teams;
     },
+    user_hours_success(state, userhours) {
+      state.status = "success";
+      state.userhours = userhours;
+    },
     hours_success(state, hours) {
       state.status = "success";
       state.hours = hours;
+    },
+    team_hours_success(state, teamhours) {
+      state.status = "success";
+      state.teamhours = teamhours;
+    },
+    specific_hours_success(state, specifichours) {
+      state.status = "success";
+      state.specifichours = specifichours;
     },
     clocks_success(state, clocks) {
       state.status = "success";
@@ -165,6 +180,60 @@ export default new Vuex.Store({
           .then((resp) => {
             const hours = resp.data;
             commit("hours_success", hours);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+    getspecifichours({ commit }, time) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + `/hour?start=${time.starttime}&end=${time.starttime}`,
+          method: "GET",
+        })
+          .then((resp) => {
+            const specifichours = resp.data;
+            commit("specific_hours_success", specifichours);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+    getuserhours({ commit }, user_id) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + "/myhours" + user_id,
+          method: "GET",
+        })
+          .then((resp) => {
+            const userhours = resp.data;
+            commit("user_hours_success", userhours);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+    getteamhours({ commit }, team_id) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + "/teamhours" + team_id,
+          method: "GET",
+        })
+          .then((resp) => {
+            const teamhours = resp.data;
+            commit("team_hours_success", teamhours);
             resolve(resp);
           })
           .catch((err) => {

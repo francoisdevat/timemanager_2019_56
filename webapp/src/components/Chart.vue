@@ -1,22 +1,6 @@
 <template>
   <div class="content">
     <div class="container">
-      <!-- <div class="Search__container">
-        <input
-          class="Search__input"
-          @keyup.enter="requestData"
-          placeholder="npm package name"
-          type="search"
-          name="search"
-          v-model="packages"
-        />
-        <button class="Search__button" @click="requestData">Find</button>
-      </div> -->
-      <!-- <div class="error-message" v-if="showError">
-        {{ errorMessage }}
-      </div>
-      <hr />
-      <h1 class="title" v-if="loaded">{{ packageName }}</h1> -->
       <div>
         <md-datepicker v-model="selectedDate">
           <label>Select date</label>
@@ -33,67 +17,42 @@
             :chart-data="hours"
             :chart-labels="labels"
           ></line-chart>
-          <!-- <bar-chart
-            v-if="loaded"
-            :chart-data="hours"
-            :chart-labels="labels"
-          ></bar-chart> -->
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-// import axios from "axios";
-// import BarChart from "./LineChart";
 import LineChart from "./LineChart";
 const moment = require("moment");
 export default {
   components: {
-    // BarChart,
     LineChart,
   },
   props: {},
   data() {
     return {
       selectedDate: null,
-      packages: null,
-      packageName: "",
-      period: "last-month",
       loaded: false,
       hours: [],
       labels: [],
-      showError: false,
-      errorMessage: "Please enter a package name",
       starttime: null,
       endtime: null,
-      apiurl: "http://localhost:4000/api/hours",
     };
   },
   mounted() {
-    // on selectdate
-    //   this.starttime = this.$route.params.start;
-    //   this.endtime = this.$route.params.end;
-    // if (props.starttime && props.endtime) {
-    //   this.apiurl = `http://localhost:4000/api/hour?start=${props.starttime}T00:00:00&end=${props.endtime}T00:00:00`;
-    //   this.requestData();
-    // }
-    // if (props.userId) {
-    //   this.apiurl = `http://localhost:4000/api/myhours/${props.userId}`;
-    //   this.requestData();
-    // }
-    // if (props.teamId) {
-    //   this.apiurl = `http://localhost:4000/api/myteamhours/${props.teamId}`;
-    //   this.requestData();
-    // }
-
     this.requestData();
+  },
+  computed: {
+    isUser: function() {
+      return this.$store.getters.isUser;
+    },
   },
   methods: {
     resetState() {
       this.loaded = false;
-      this.showError = false;
     },
+    /* Tous les horaires */
     requestData() {
       this.resetState();
 
@@ -107,36 +66,64 @@ export default {
           this.labels = response.data.data.map((hour) =>
             moment(hour.end).format("MM-DD")
           );
-          this.setURL();
           this.loaded = true;
         })
         .catch((error) => console.log(error));
-
-      // axios
-      //   .get(this.apiurl)
-      //   .then((response) => {
-      //     this.hours = response.data.data.map(
-      //       (time) =>
-      //         moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-      //     );
-      //     this.labels = response.data.data.map((hour) =>
-      //       moment(hour.end).format("DD MM YYYY")
-      //     );
-      //     // this.packageName = response.data.package;
-      //     this.setURL();
-      //     this.loaded = true;
-      //   })
-      //   .catch((err) => {
-      //     this.errorMessage = err.response.data.error;
-      //     this.showError = true;
-      //   });
     },
-    setURL() {
-      history.pushState(
-        { info: `npm-stats ${this.packages}` },
-        this.packages,
-        `/#/${this.packages}`
-      );
+    /* Tous les horaires d'un utilisateur */
+    requestUserData() {
+      this.resetState();
+      let user_id = this.isUser.id;
+      this.$store
+        .dispatch("getuserhours", { user_id })
+        .then((response) => {
+          this.hours = response.data.data.map(
+            (time) =>
+              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+          );
+          this.labels = response.data.data.map((hour) =>
+            moment(hour.end).format("MM-DD")
+          );
+          this.loaded = true;
+        })
+        .catch((error) => console.log(error));
+    },
+    /* Tous les horaires d'une team */
+    requestTeamData() {
+      this.resetState();
+      let team_id = this.isUser.team_id
+      this.$store
+        .dispatch("getteamhours", { team_id })
+        .then((response) => {
+          this.hours = response.data.data.map(
+            (time) =>
+              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+          );
+          this.labels = response.data.data.map((hour) =>
+            moment(hour.end).format("MM-DD")
+          );
+          this.loaded = true;
+        })
+        .catch((error) => console.log(error));
+    },
+    /* Tous les horaires par date */
+    requestHourData() {
+      this.resetState();
+      let starttime = this.starttime
+      let endtime = this.endtime
+      this.$store
+        .dispatch("getspecifichours", { starttime, endtime })
+        .then((response) => {
+          this.hours = response.data.data.map(
+            (time) =>
+              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+          );
+          this.labels = response.data.data.map((hour) =>
+            moment(hour.end).format("MM-DD")
+          );
+          this.loaded = true;
+        })
+        .catch((error) => console.log(error));
     },
   },
 };
