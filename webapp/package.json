@@ -13,6 +13,7 @@
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
+    "jwt-decode": "^3.0.0",
     "portal-vue": "^2.1.7",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.3",

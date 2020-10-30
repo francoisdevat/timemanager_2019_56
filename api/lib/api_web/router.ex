@@ -6,12 +6,17 @@ defmodule GothamWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :jwt_authenticated do
+    plug CORSPlug, origin: "*"
+    plug Gotham.Guardian.AuthPipeline
+  end
+
   scope "/api", GothamWeb do
     pipe_through :api
-    resources "/users", UserController, only: [:index, :show, :create, :update, :delete]
+    resources "/users", UserController, only: [:index, :create, :update, :delete]
     options "/users", UserController, :options
     options "/users/:id", UserController, :options
-    post "/login", UserController, :verify_user
+    post "/login", UserController, :sign_in
     options "/login", UserController, :options
     resources "/teams", TeamController, only: [:index, :show, :create, :update, :delete]
     options "/teams", TeamController, :options
@@ -23,8 +28,17 @@ defmodule GothamWeb.Router do
     options "/clocks/u/:team_id", ClockController, :options
     resources "/hours", HourController, only: [:index, :show, :create, :update, :delete]
     get "/hour", HourController, :hourbytime
+    get "/myhours/:user_id", HourController, :hourbyuser
     options "/hours", HourController, :options
+    options "/myhours/:user_id", HourController, :options
     options "/hours/:id", HourController, :options
+  end
+
+  scope "/api/", GothamWeb do
+    pipe_through [:api, :jwt_authenticated]
+
+    get "/my_user", UserController, :show
+    options "/my_user", UserController, :options
   end
 
   # Enables LiveDashboard only for development

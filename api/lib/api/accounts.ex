@@ -9,7 +9,7 @@ defmodule Gotham.Accounts do
   alias Gotham.Accounts.User
   alias Gotham.Partners.Team
   alias Gotham.Guardian
- require Logger
+  require Logger
   @doc """
   Returns the list of users.
 
@@ -130,10 +130,10 @@ defmodule Gotham.Accounts do
   end
 
   defp get_by_email(email) do
-    case Repo.get_by(User, email: email) do
+    case Repo.get_by!(User, email: email) |> Repo.preload(:team) do
       nil ->
         {:error, "Login error."}
-      user ->
+      user -> 
         {:ok, user}
     end
   end

@@ -29,14 +29,6 @@ defmodule GothamWeb.FallbackController do
     # |> render("auth_required.json")
     |> json(%{error: "Login or password incorrect"})
   end
-
-  def call(conn, {:error, :odd}) do
-    conn
-    |> put_status(:unauthorized)
-    # |> put_view(GothamWeb.ErrorView)
-    # |> render("auth_required.json")
-    |> json(%{error: "odd"})
-  end
 end
 
   

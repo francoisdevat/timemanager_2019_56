@@ -17,7 +17,7 @@
     </div>
     <div class="md-layout">
       <div class="md-layout-item">
-          <Chart/>
+        <Chart />
       </div>
       <div class="md-layout-item"><TeamTable /></div>
     </div>
@@ -26,7 +26,7 @@
 
 <script>
 // import Axios from "axios";
-import Chart from "./Chart"
+import Chart from "./Chart";
 import TeamTable from "./TeamTable";
 
 const moment = require("moment");
@@ -73,6 +73,12 @@ export default {
       //   })
       //   .catch((error) => console.log(error));
     },
+  },
+  async mounted() {
+    // console.log(this.$store.getters.user);
+    // if (!this.$store.getters.user) {
+    //   this.$router.push("login");
+    // }
   },
 };
 </script>

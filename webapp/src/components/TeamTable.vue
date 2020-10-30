@@ -2,24 +2,67 @@
   <div id="team-table">
     <md-table id="team-table-container" v-if="infos">
       <md-table-row>
-          <md-table-head class="colum-container" >Name</md-table-head>
-          <md-table-head class="colum-container" >Type</md-table-head>
-          <md-table-head class="colum-container" >Team</md-table-head>
+        <md-table-head class="colum-container">Name</md-table-head>
+        <md-table-head class="colum-container">Type</md-table-head>
+        <md-table-head class="colum-container">Team</md-table-head>
       </md-table-row>
       <!-- <md-table-row v-for="(info, info.status) in infos" v-if="info.status=true" > -->
-      
-      <md-table-row v-for="(info, i) in infos" :key="info.id" >
-          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" >{{info.firstname}} {{info.lastname}}</md-table-cell>
-          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" >{{info.type}}</md-table-cell>
-          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" >
-              <md-field>
-                  <label v-if="info.status" for="team">{{info.team}}</label>
-                  <md-select class="team" name="team" id="team" v-model="info[i]" @md-selected="updateTeam(info, $event)" >
-                      <md-option  v-for="team in teams" :key="team.id" :value="team.id" class="colum-container" >{{team.name}}</md-option>
-                  </md-select>
-              </md-field>
-          </md-table-cell>
-          <md-table-cell v-if="info.status" v-bind:class="{active: isInactive.includes(info.id)}" class="colum-container" ><button @click="(updateFalse(info), isInactive.includes(info.id) ? isInactive.splice(isInactive.indexOf(info.id), 1) : isInactive.push(info.id))" class="btn-icon-corbeille" ><md-icon class="icon-corbeille">delete</md-icon></button></md-table-cell>
+
+
+      <md-table-row v-for="(info, i) in infos" :key="info.id">
+        <md-table-cell
+          v-if="info.status"
+          v-bind:class="{ active: isInactive.includes(info.id) }"
+          class="colum-container"
+          >{{ info.firstname }} {{ info.lastname }}</md-table-cell
+        >
+        <md-table-cell
+          v-if="info.status"
+          v-bind:class="{ active: isInactive.includes(info.id) }"
+          class="colum-container"
+          >{{ info.type }}</md-table-cell
+        >
+        <md-table-cell
+          v-if="info.status"
+          v-bind:class="{ active: isInactive.includes(info.id) }"
+          class="colum-container"
+        >
+          <md-field>
+            <label for="team">{{ info.team }}</label>
+            <md-select
+              class="team"
+              name="team"
+              :id="info.id"
+              v-model="info[i]"
+              @md-selected="updateTeam(info[i], info.id)"
+              :key="info.id"
+            >
+              <md-option
+                v-for="team in teams"
+                :key="team.id"
+                :value="team.id"
+                class="colum-container"
+                >{{ team.name }}</md-option
+              >
+            </md-select>
+          </md-field>
+        </md-table-cell>
+        <md-table-cell
+          v-if="info.status"
+          v-bind:class="{ active: isInactive.includes(info.id) }"
+          class="colum-container"
+          ><button
+            @click="
+              updateFalse(info),
+                isInactive.includes(info.id)
+                  ? isInactive.splice(isInactive.indexOf(info.id), 1)
+                  : isInactive.push(info.id)
+            "
+            class="btn-icon-corbeille"
+          >
+            <md-icon class="icon-corbeille">delete</md-icon>
+          </button></md-table-cell
+        >
       </md-table-row>
     </md-table>
     <md-snackbar :md-active.sync="actionMessage"
@@ -30,7 +73,7 @@
 </template>
 
 <script>
-import Axios from "axios"
+import Axios from "axios";
 
 // on push dans un tableau les info.id qui on été cliqué pour le display none afin de les garder en display none apres un clique sur une autre ligne
 
@@ -136,10 +179,6 @@ for (var i = 1; i <= 10; i++) {
   
 </script>
 
-
-
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 
 #team-table {
@@ -148,6 +187,7 @@ for (var i = 1; i <= 10; i++) {
   overflow: hidden;
   overflow-y: scroll;
 }
+
 
 .md-layout-item {
     display: flex;
@@ -159,16 +199,17 @@ for (var i = 1; i <= 10; i++) {
   overflow: hidden;
 }
 
-
-.colum-container{
+.colum-container {
   padding: 0;
 }
 
-.md-table-head .md-table-head-container{
+.md-table-head .md-table-head-container {
   text-align: center;
 }
 
-.md-table-cell:last-child, .md-table-cell-container, .md-content {
+.md-table-cell:last-child,
+.md-table-cell-container,
+.md-content {
   padding-right: 0;
   padding-left: 0;
 }
@@ -178,11 +219,11 @@ for (var i = 1; i <= 10; i++) {
 }
 
 .md-list-item-content {
-    min-height: 0;
+  min-height: 0;
 }
 
 .md-menu-content {
-    max-width: 165px;
+  max-width: 165px;
 }
 
 .icon-corbeille:hover {
@@ -194,12 +235,11 @@ for (var i = 1; i <= 10; i++) {
   background: initial;
 }
 
-.md-menu.md-select:not(.md-disabled) .md-icon{
+.md-menu.md-select:not(.md-disabled) .md-icon {
   display: none;
 }
 
 .active {
   display: none;
 }
-
 </style>

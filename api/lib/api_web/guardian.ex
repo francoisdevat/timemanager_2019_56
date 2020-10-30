@@ -1,5 +1,5 @@
 defmodule Gotham.Guardian do
-  use Guardian
+  use Guardian, otp_app: :api
 
   # Ajoute le user ID au sub du token
   def subject_for_token(user, _claims) do

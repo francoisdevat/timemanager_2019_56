@@ -4,17 +4,21 @@
       <md-button class="md-icon-button" @click="showNavigation = true">
         <md-icon>menu</md-icon>
       </md-button>
-      <span class="md-title">Gotham City Hall</span>
-      <div v-if="!logout" class="md-toolbar-section-end">
-        <md-button>{{ user.firstname + " " + user.lastname }}</md-button>
+      <span class="md-title"
+        >Gotham City Hall</span
+      >
+      <div v-if="this.$store.getters.isLoggedIn" class="md-toolbar-section-end">
+        <md-button>{{ isUser.firstname + " " + isUser.lastname }}</md-button>
         <md-button>General Manager</md-button>
         <md-button>Team Epitech</md-button>
       </div>
       <div class="md-toolbar-section-end">
-        <md-button class="bouton" @click="signout" v-if="!logout"
+        <md-button
+          class="bouton"
+          v-if="this.$store.getters.isLoggedIn"
+          @click="logout()"
           >Disconnect</md-button
         >
-        <md-button class="boutons" v-if="logout">Connect</md-button>
       </div>
     </md-toolbar>
 
@@ -22,12 +26,27 @@
       <md-toolbar class="md-transparent" md-elevation="0">
         <span class="md-title">Menu</span>
       </md-toolbar>
-
       <md-list>
-        <md-list-item>
+        <md-list-item v-if="isLoggedIn">
           <md-icon>move_to_inbox</md-icon>
           <router-link to="/account"
-            ><span class="md-list-item-text">Account</span></router-link
+            ><span @click="signout" class="md-list-item-text"
+              >Account</span
+            ></router-link
+          >
+        </md-list-item>
+
+        <md-list-item>
+          <md-icon>move_to_inbox</md-icon>
+          <router-link to="/register"
+            ><span class="md-list-item-text">Register</span></router-link
+          >
+        </md-list-item>
+
+        <md-list-item>
+          <md-icon>error</md-icon>
+          <router-link to="/login"
+            ><span class="md-list-item-text">Login</span></router-link
           >
         </md-list-item>
 
@@ -40,30 +59,19 @@
 
         <md-list-item>
           <md-icon>move_to_inbox</md-icon>
-          <router-link to="/register"
-            ><span class="md-list-item-text">Register</span></router-link
+          <router-link to="/teamtable"
+            ><span class="md-list-item-text">Team Table</span></router-link
           >
         </md-list-item>
-
         <md-list-item>
-          <md-icon>send</md-icon>
-          <router-link to="/workingtimes"
-            ><span class="md-list-item-text">Working Times</span></router-link
+          <md-icon>move_to_inbox</md-icon>
+          <router-link to="/chart"
+            ><span class="md-list-item-text">Chart</span></router-link
           >
         </md-list-item>
-
         <md-list-item>
-          <md-icon>delete</md-icon>
-          <router-link to="/workingtime"
-            ><span class="md-list-item-text">Working Time</span></router-link
-          >
-        </md-list-item>
-
-        <md-list-item>
-          <md-icon>error</md-icon>
-          <router-link to="/login"
-            ><span class="md-list-item-text">Login</span></router-link
-          >
+          <md-icon>move_to_inbox</md-icon>
+          <span class="md-list-item-text" @click="logout()">Logout</span>
         </md-list-item>
       </md-list>
     </md-drawer>
@@ -77,28 +85,41 @@
 </template>
 
 <script>
-// import Axios from "axios";
 export default {
   name: "App",
   data: () => ({
     showNavigation: false,
     showSidepanel: false,
-    logout: true,
+    signout: true,
     user: null,
   }),
-  methods: {
-    signout: function() {
-      this.$router.push("login");
-      this.logout = true;
+  computed: {
+    isLoggedIn: function() {
+      return this.$store.getters.isLoggedIn;
+    },
+    isUser: function() {
+      return this.$store.getters.isUser;
     },
   },
-  // async mounted() {
-  //   await Axios.get(
-  //     "http://localhost:4000/api/users/f10053d7-7272-40ac-9d5b-8f78aeb7d8c7"
-  //   ).then((response) => {
-  //     this.user = response.data;
-  //   });
-  // },
+  methods: {
+    logout: function() {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/login");
+      });
+    },
+  },
+  async mounted() {},
+  created: function() {
+    // this.$http.interceptors.response.use(undefined, function (err) {
+    //   // return new Promise(function (resolve, reject) {
+    //   return new Promise(function () {
+    //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+    //       this.$store.dispatch("logout")
+    //     }
+    //     throw err;
+    //   });
+    // });
+  },
 };
 </script>
 
@@ -109,7 +130,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /* margin-top: 60px; */
   min-height: 85vh;
 }
 .page-container {
