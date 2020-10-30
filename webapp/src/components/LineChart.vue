@@ -6,11 +6,8 @@ export default {
   extends: Line,
   props: {
     chartData: {
-      type: Object,
+      type: Array,
       required: false,
-      default: function() {
-        return {};
-      },
     },
     chartLabels: {
       type: Array,

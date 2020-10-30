@@ -1,6 +1,6 @@
 <template>
   <div id="team-table">
-    <md-table v-if="infos">
+    <md-table id="team-table-container" v-if="infos">
       <md-table-row>
           <md-table-head class="colum-container" >Name</md-table-head>
           <md-table-head class="colum-container" >Type</md-table-head>
@@ -128,7 +128,6 @@ for (var i = 1; i <= 10; i++) {
         .get('http://localhost:4000/api/users')
         .then(response => (this.infos = response.data.data))
 
-
       Axios
         .get('http://localhost:4000/api/teams')
         .then(response => (this.teams = response.data.data))
@@ -142,10 +141,24 @@ for (var i = 1; i <= 10; i++) {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+
 #team-table {
+  width: 30vw;
+  height: 80vh;
   overflow: hidden;
   overflow-y: scroll;
 }
+
+.md-layout-item {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#team-table-container {
+  max-width: 30vw;
+  overflow: hidden;
+}
+
 
 .colum-container{
   padding: 0;
@@ -157,7 +170,7 @@ for (var i = 1; i <= 10; i++) {
 
 .md-table-cell:last-child, .md-table-cell-container, .md-content {
   padding-right: 0;
-  padding-left: 10px;
+  padding-left: 0;
 }
 
 .team {

@@ -17,11 +17,20 @@
       </div>
       <hr />
       <h1 class="title" v-if="loaded">{{ packageName }}</h1> -->
-      <div>
-        <md-datepicker v-model="selectedDate">
-          <label>Select date</label>
-        </md-datepicker>
+      <div id="select-date">
+          <div>
+            <md-datepicker v-model="selectedDateStart" md-immediately>
+              <label>Select date start</label>
+            </md-datepicker>
+          </div>
+          <div>
+            <md-datepicker v-model="selectedDateEnd" md-immediately>
+              <label>Select date end</label>
+            </md-datepicker>
+          </div>
+          <md-button class="md-dense md-primary btn-show" @click="(selectDate(selectedDateStart, selectedDateEnd))" >Show</md-button>
       </div>
+
       <div class="Chart__container" v-if="loaded">
         <div class="Chart__title">
           Working time
@@ -43,16 +52,21 @@
     </div>
   </div>
 </template>
+
+
 <script>
 import axios from "axios";
 // import BarChart from "./LineChart";
 import LineChart from "./LineChart";
 const moment = require("moment");
+
+
 export default {
   components: {
     // BarChart,
     LineChart
   },
+
   props: {},
   data() {
     return {
@@ -67,8 +81,12 @@ export default {
       errorMessage: "Please enter a package name",
       starttime: null,
       endtime: null,
+      selectedDateStart: null,
+      selectedDateEnd: null
     };
   },
+
+
   mounted() {
     if (this.$route.params.start) {
       this.starttime = this.$route.params.start;
@@ -77,11 +95,25 @@ export default {
       this.requestData();
     }
   },
+
+
   methods: {
+
     resetState() {
       this.loaded = false;
       this.showError = false;
     },
+
+    selectDate(selectedDateStart, selectedDateEnd){
+        if(selectedDateStart && selectedDateEnd && selectedDateStart < selectedDateEnd) {
+            selectedDateStart = moment(selectedDateStart).format("YYYY-MM-DD") + "T00:00:00"
+            selectedDateEnd = moment(selectedDateEnd).format("YYYY-MM-DD") + "T00:00:00"
+            console.log(selectedDateStart, " " ,selectedDateEnd)
+        }
+    },
+
+
+
     requestData() {
       // if (
       //   this.packages === null ||
@@ -92,6 +124,7 @@ export default {
       //   return;
       // }
       this.resetState();
+
       axios
         .get(
           // `https://api.npmjs.org/downloads/range/${this.period}/${this.packages}`
@@ -124,4 +157,19 @@ export default {
     },
   },
 };
+
 </script>
+
+
+<style>
+
+#select-date {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-show {
+  margin-top: 3%;
+}
+
+</style>
