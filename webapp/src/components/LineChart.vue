@@ -8,9 +8,6 @@ export default {
     chartData: {
       type: Array,
       required: false,
-      // default: function() {
-      //   return {};
-      // },
     },
     chartLabels: {
       type: Array,

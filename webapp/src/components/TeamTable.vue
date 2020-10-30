@@ -1,12 +1,13 @@
 <template>
   <div id="team-table">
-    <md-table v-if="infos">
+    <md-table id="team-table-container" v-if="infos">
       <md-table-row>
         <md-table-head class="colum-container">Name</md-table-head>
         <md-table-head class="colum-container">Type</md-table-head>
         <md-table-head class="colum-container">Team</md-table-head>
       </md-table-row>
       <!-- <md-table-row v-for="(info, info.status) in infos" v-if="info.status=true" > -->
+
 
       <md-table-row v-for="(info, i) in infos" :key="info.id">
         <md-table-cell
@@ -64,6 +65,10 @@
         >
       </md-table-row>
     </md-table>
+    <md-snackbar :md-active.sync="actionMessage"
+        > {{message}}</md-snackbar
+      >
+
   </div>
 </template>
 
@@ -72,114 +77,126 @@ import Axios from "axios";
 
 // on push dans un tableau les info.id qui on été cliqué pour le display none afin de les garder en display none apres un clique sur une autre ligne
 
-var infos = [];
+var tabTeam = []
 for (var i = 1; i <= 10; i++) {
-  infos.push({
-    id: i,
-  });
+    tabTeam.push({
+    id: i
+  })
 }
 
-export default {
-  name: "TeamTable",
-  data: () => ({
-    infos: [],
-    email: null,
-    firstname: null,
-    lastname: null,
-    status: null,
-    team: null,
-    id: null,
-    type: null,
-    teams: [],
-    isInactive: [],
-    test: {},
-    teamSelected: null,
-    // user: this.$store.getters.user
-  }),
+  export default {
+    name: 'TeamTable',
+    data: () => ({
+      infos: null,
+      email: null,
+      firstname: null,
+      lastname: null,
+      status: null,
+      team: null,
+      id: null,
+      type:null,
+      teams: null,
+      isInactive: [],
+      message: "",
+      actionMessage: false
+    }),
 
-  methods: {
-    updateFalse: function(info) {
-      const id = info.id;
-      try {
-        Axios.put("http://localhost:4000/api/users/" + id, {
-          user: {
-            email: info.email,
-            firstname: info.firstname,
-            lastname: info.lastname,
-            password: info.password_hash,
-            status: false,
-            team_id: info.team_id,
-            type: info.type,
-            team: info.team,
-          },
-        })
-          .then(function(response) {
-            console.log(response);
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+    methods : {
+        updateFalse: function (info) {
+          const id= info.id
+          Axios
+            .put('http://localhost:4000/api/users/'+ id, {
+                user : {
+                    email: info.email,
+                    firstname: info.firstname,
+                    lastname: info.lastname,
+                    password: info.password_hash, 
+                    status: false,
+                    team_id: info.team_id,
+                    type: info.type,
+                    team: info.team
+                }
+            })
+            .then((response) => {
+                if(response.status === 200){             
+                    this.message = "The user " + info.firstname + " " + info.lastname + " has successfully been delete!" 
+                    this.actionMessage = true
+                }
+            })
+            .catch(() => {
+                this.message = "An error has occured, please try again" 
+                this.actionMessage = true
+            });
+        },
+
+        
+        // fonction qui remet le "status" d'un user en true pour l'afficher dans la liste nécéssite la tab de l'user
+        updateTeam: function (info, teamId) {
+          const id= info.id
+          const teamName= ""
+   
+          Axios
+            .get('http://localhost:4000/api/teams/' + teamId)
+            .then(response => (this.teamName = response.data.data.name))
+
+
+          Axios
+            .put('http://localhost:4000/api/users/'+ id, {
+              user : {
+                email: info.email,
+                firstname: info.firstname,
+                lastname: info.lastname,
+                password: info.password_hash, 
+                status: info.status,
+                team_id: teamId,
+                type: info.type,
+                team: teamName
+              }
+            })
+            .then((response) => {
+                if(response.status === 200){             
+                    this.message = "The team of user " + info.firstname + " " + info.lastname + " has successfully been changed!" 
+                    this.actionMessage = true
+                }
+            })
+            .catch(() => {
+                this.message = "An error has occured, please try again" 
+                this.actionMessage = true
+            });
+         },
     },
-    // fonction qui remet le "status" d'un user en true pour l'afficher dans la liste nécéssite la tab de l'user
-    updateTeam: function(info, infoId) {
-      console.log(info, infoId);
-      // this.test = info;
-      //   try {
 
-      //   Axios
-      //     .get('http://localhost:4000/api/teams/' + teamId)
-      //     .then(response => (this.teamName = response.data.data.name))
+    mounted () {
+      Axios
+        .get('http://localhost:4000/api/users')
+        .then(response => (this.infos = response.data.data))
 
-      //   Axios
-      //     .put('http://localhost:4000/api/users/'+ id, {
-      //       user : {
-      //         email: info.email,
-      //         firstname: info.firstname,
-      //         lastname: info.lastname,
-      //         password: info.password_hash,
-      //         status: info.status,
-      //         team_id: teamId,
-      //         type: info.type,
-      //         team: teamName
-      //       }
-      //     })
-      //     .then(function (response) {
-      //       console.log(response, "yes");
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     });
-      //   } catch (error) {
-      //     console.log(error)
-      //   }
-    },
-  },
-
-  mounted() {
-    this.$store
-      .dispatch("getallusers")
-      .then((response) => {
-        this.infos = response.data.data;
-      })
-      .catch((error) => console.log(error));
-
-    this.$store
-      .dispatch("getallteams")
-      .then((response) => {
-        this.teams = response.data.data;
-      })
-      .catch((error) => console.log(error));
-  },
-};
+      Axios
+        .get('http://localhost:4000/api/teams')
+        .then(response => (this.teams = response.data.data))
+    }
+  }
+  
 </script>
 
 <style>
+
 #team-table {
+  width: 30vw;
+  height: 80vh;
   overflow: hidden;
   overflow-y: scroll;
+}
+
+
+.md-layout-item {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#team-table-container {
+  max-width: 30vw;
+  overflow: hidden;
 }
 
 .colum-container {
@@ -194,7 +211,7 @@ export default {
 .md-table-cell-container,
 .md-content {
   padding-right: 0;
-  padding-left: 10px;
+  padding-left: 0;
 }
 
 .team {
