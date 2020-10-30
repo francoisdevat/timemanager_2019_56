@@ -34,7 +34,7 @@
               name="team"
               :id="info.id"
               v-model="info[i]"
-              @md-selected="updateTeam(info[i], info.id)"
+              @md-selected="updateTeam(info[i], info)"
               :key="info.id"
             >
               <md-option
@@ -131,9 +131,8 @@ for (var i = 1; i <= 10; i++) {
 
         
         // fonction qui remet le "status" d'un user en true pour l'afficher dans la liste nécéssite la tab de l'user
-        updateTeam: function (info, teamId) {
-          const id= info.id
-          const teamName= ""
+        updateTeam: function (teamId, info) {
+
    
           Axios
             .get('http://localhost:4000/api/teams/' + teamId)
@@ -141,7 +140,7 @@ for (var i = 1; i <= 10; i++) {
 
 
           Axios
-            .put('http://localhost:4000/api/users/'+ id, {
+            .put('http://localhost:4000/api/users/'+ info.id, {
               user : {
                 email: info.email,
                 firstname: info.firstname,
@@ -150,7 +149,7 @@ for (var i = 1; i <= 10; i++) {
                 status: info.status,
                 team_id: teamId,
                 type: info.type,
-                team: teamName
+                team: this.teamName
               }
             })
             .then((response) => {

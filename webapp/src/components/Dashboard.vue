@@ -7,10 +7,15 @@
           @click.native="pickdate"
           >Clock in</md-button
         >
-        <md-button v-if="pointed" class="md-fab red btn-color" @click.native="pickdate"
+        <md-button 
+          v-if="pointed" 
+          class="md-fab red btn-color" 
+          @click.native="pickdate"
           >Clock out</md-button
         >
-        <md-content v-if="pointed" class="md-elevation-10"
+        <md-content 
+          v-if="pointed" 
+          class="md-elevation-10"
           >You clocked in on
           {{ selectedDate | moment("MM/DD/YYYY hh:mm") }}</md-content
         >
@@ -30,20 +35,26 @@ import Chart from "./Chart";
 import TeamTable from "./TeamTable";
 
 const moment = require("moment");
+
 export default {
+
   components: {
     Chart,
     TeamTable,
   },
+
   name: "Dashboard",
   data: () => ({
     selectedDate: "",
     pointed: false,
   }),
+
   methods: {
+
     moment: function() {
       return moment();
     },
+
     pickdate: function() {
       this.selectedDate = new Date()
       // moment(new Date()).format("YYYY-MM-DD-h:mm:ss")
@@ -82,7 +93,10 @@ export default {
   },
 };
 </script>
+
+
 <style scoped>
+
 .container-large {
   position: relative;
 }
@@ -90,22 +104,20 @@ export default {
 .btn-color {
   color: white!important;
   background-color: Green!important;
-  width: 8vw;
-  height: 8vw;
+  width: 95px;
+  height: 80px;
 }
 
 .large {
     position: absolute;
-    left: 50%;
-    top: -11%;
+    left: 60%;
+    top: -6%;
     transform: translateX(-50%);
-    z-index: 1000;
 }
+
 .red {
   background-color: red !important;
   color: white !important;
 }
-.test {
-  display: flex;
-}
+
 </style>

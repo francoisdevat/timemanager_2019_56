@@ -50,6 +50,7 @@
         </div>
       </div>
     </div>
+        <md-snackbar :md-active.sync="actionMessageHours"> {{message}}</md-snackbar>
   </div>
 </template>
 
@@ -71,40 +72,28 @@ export default {
   data() {
     return {
       selectedDate: null,
-      packages: null,
-      packageName: "",
-      period: "last-month",
       loaded: false,
       hours: [],
       labels: [],
-      showError: false,
-      errorMessage: "Please enter a package name",
-      starttime: null,
-      endtime: null,
+      selectedDateStart: null,
+      selectedDateEnd: null,
       apiurl: "http://localhost:4000/api/hours",
+      message: "",
+      actionMessageHours: false
     };
   },
 
 
   mounted() {
-    // on selectdate
-    //   this.starttime = this.$route.params.start;
-    //   this.endtime = this.$route.params.end;
-    // if (props.starttime && props.endtime) {
-    //   this.apiurl = `http://localhost:4000/api/hour?start=${props.starttime}T00:00:00&end=${props.endtime}T00:00:00`;
-    //   this.requestData();
-    // }
-    // if (props.userId) {
-    //   this.apiurl = `http://localhost:4000/api/myhours/${props.userId}`;
-    //   this.requestData();
-    // }
-    // if (props.teamId) {
-    //   this.apiurl = `http://localhost:4000/api/myteamhours/${props.teamId}`;
-    //   this.requestData();
-    // }
-
     this.requestData();
   },
+
+  computed: {
+      isSpecificHours: function() {
+        return this.$store.getters.isSpecificHours;
+      },
+  },
+
 
 
   methods: {
@@ -116,18 +105,36 @@ export default {
 
     selectDate(selectedDateStart, selectedDateEnd){
         if(selectedDateStart && selectedDateEnd && selectedDateStart < selectedDateEnd) {
-            selectedDateStart = moment(selectedDateStart).format("YYYY-MM-DD") + "T00:00:00"
-            selectedDateEnd = moment(selectedDateEnd).format("YYYY-MM-DD") + "T00:00:00"
-            console.log(selectedDateStart, " " ,selectedDateEnd)
+          let start =selectedDateStart = moment(selectedDateStart).format("YYYY-MM-DD") + "T00:00:00"
+          let end = selectedDateEnd = moment(selectedDateEnd).format("YYYY-MM-DD") + "T00:00:00"
+
+          this.resetState();
+          this.$store
+          .dispatch("getspecifichours", {start, end})
+          .then((response) => {
+            this.hours = response.data.data.map(
+              (time) =>
+                moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+            );
+            this.labels = response.data.data.map((hour) =>
+                moment(hour.end).format("MM-DD")
+            );
+            
+            this.loaded = true;         
+          })
+          .catch((error) => console.log(error));
+        }
+        else{
+          this.message = "Please, select a correct date." 
+          this.actionMessageHours = true
         }
     },
 
 
 
     requestData() {
-      this.resetState();
-
-      this.$store
+        this.resetState();
+        this.$store
         .dispatch("getallhours")
         .then((response) => {
           this.hours = response.data.data.map(
@@ -137,39 +144,24 @@ export default {
           this.labels = response.data.data.map((hour) =>
             moment(hour.end).format("MM-DD")
           );
-          this.setURL();
           this.loaded = true;
         })
         .catch((error) => console.log(error));
 
-      // axios
-      //   .get(this.apiurl)
-      //   .then((response) => {
-      //     this.hours = response.data.data.map(
-      //       (time) =>
-      //         moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-      //     );
-      //     this.labels = response.data.data.map((hour) =>
-      //       moment(hour.end).format("DD MM YYYY")
-      //     );
-      //     // this.packageName = response.data.package;
-      //     this.setURL();
-      //     this.loaded = true;
-      //   })
-      //   .catch((err) => {
-      //     this.errorMessage = err.response.data.error;
-      //     this.showError = true;
-      //   });
+      if (this.isSpecificHours.length > 0) {
+        this.hours = this.isSpecificHours.map(
+          (time) => moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+        );
+        this.labels = this.isSpecificHours.map((hour) =>
+          moment(hour.end).format("MM-DD")
+        );
+        this.loaded = true;
+      }
+
     },
-    setURL() {
-      history.pushState(
-        { info: `npm-stats ${this.packages}` },
-        this.packages,
-        `/#/${this.packages}`
-      );
-    },
-  },
-};
+
+  }
+}
 
 </script>
 

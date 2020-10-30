@@ -14,6 +14,7 @@ export default new Vuex.Store({
     hours: [],
     clocks: [],
     all_users: [],
+    specific_hours: [],
   },
   mutations: {
     auth_request(state) {
@@ -50,7 +51,12 @@ export default new Vuex.Store({
       state.status = "success";
       state.all_users = all_users;
     },
+    specific_hours_success(state, specifichours) {
+      state.status = "success";
+      state.specific_hours = specifichours;
+    },
   },
+  
   actions: {
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
@@ -173,10 +179,32 @@ export default new Vuex.Store({
           });
       });
     },
+    getspecifichours({ commit }, time) {
+      console.log(time)
+
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + `/hour?start=${time.start}&end=${time.end}`,
+          method: "GET",
+        })
+          .then((resp) => {
+            const specifichours = resp.data;
+            commit("specific_hours_success", specifichours);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
   },
+  
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
-    isUser: (state) => state.user
+    isUser: (state) => state.user,
+    isSpecificHours: (state) => state.specific_hours
   },
 });
