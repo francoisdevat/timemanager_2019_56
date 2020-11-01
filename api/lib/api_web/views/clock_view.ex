@@ -14,7 +14,6 @@ defmodule GothamWeb.ClockView do
     %{id: clock.id,
       time: clock.time,
       status: clock.status,
-      user_id: clock.user_id,
-      team_id: clock.team_id}
+      user_id: clock.user_id}
   end
 end

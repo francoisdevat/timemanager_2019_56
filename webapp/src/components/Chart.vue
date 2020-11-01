@@ -52,67 +52,10 @@ export default {
     resetState() {
       this.loaded = false;
     },
-    /* Tous les horaires */
     requestData() {
       this.resetState();
-
       this.$store
         .dispatch("getallhours")
-        .then((response) => {
-          this.hours = response.data.data.map(
-            (time) =>
-              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-          );
-          this.labels = response.data.data.map((hour) =>
-            moment(hour.end).format("MM-DD")
-          );
-          this.loaded = true;
-        })
-        .catch((error) => console.log(error));
-    },
-    /* Tous les horaires d'un utilisateur */
-    requestUserData() {
-      this.resetState();
-      let user_id = this.isUser.id;
-      this.$store
-        .dispatch("getuserhours", { user_id })
-        .then((response) => {
-          this.hours = response.data.data.map(
-            (time) =>
-              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-          );
-          this.labels = response.data.data.map((hour) =>
-            moment(hour.end).format("MM-DD")
-          );
-          this.loaded = true;
-        })
-        .catch((error) => console.log(error));
-    },
-    /* Tous les horaires d'une team */
-    requestTeamData() {
-      this.resetState();
-      let team_id = this.isUser.team_id
-      this.$store
-        .dispatch("getteamhours", { team_id })
-        .then((response) => {
-          this.hours = response.data.data.map(
-            (time) =>
-              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-          );
-          this.labels = response.data.data.map((hour) =>
-            moment(hour.end).format("MM-DD")
-          );
-          this.loaded = true;
-        })
-        .catch((error) => console.log(error));
-    },
-    /* Tous les horaires par date */
-    requestHourData() {
-      this.resetState();
-      let starttime = this.starttime
-      let endtime = this.endtime
-      this.$store
-        .dispatch("getspecifichours", { starttime, endtime })
         .then((response) => {
           this.hours = response.data.data.map(
             (time) =>

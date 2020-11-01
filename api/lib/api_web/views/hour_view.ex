@@ -14,6 +14,7 @@ defmodule GothamWeb.HourView do
     %{id: hour.id,
       start: hour.start,
       end: hour.end,
-      user_id: hour.user_id}
+      user_id: hour.user_id,
+      team_id: hour.team_id}
   end
 end

@@ -166,6 +166,7 @@ export default {
       })
       .catch((error) => console.log(error));
 
+
     this.$store
       .dispatch("getallteams")
       .then((response) => {

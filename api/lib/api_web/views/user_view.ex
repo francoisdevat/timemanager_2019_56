@@ -18,7 +18,8 @@ defmodule GothamWeb.UserView do
       password_hash: user.password_hash,
       status: user.status,
       team_id: user.team_id,
-      type: user.type,
+      right_id: user.right_id,
+      right: user.right.name,
       team: user.team.name}
   end
 

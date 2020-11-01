@@ -1,8 +1,8 @@
-defmodule Gotham.Repo.Migrations.CreateTeams do
+defmodule Gotham.Repo.Migrations.CreateRights do
   use Ecto.Migration
 
   def change do
-    create table(:teams, primary_key: false) do
+    create table(:rights, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :name, :string, null: false
 

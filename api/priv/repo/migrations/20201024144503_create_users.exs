@@ -4,13 +4,13 @@ defmodule Gotham.Repo.Migrations.CreateUsers do
   def change do
     create table(:users, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :email, :string
-      add :firstname, :string
-      add :lastname, :string
-      add :password_hash, :string
+      add :email, :string, null: false
+      add :firstname, :string, null: false
+      add :lastname, :string, null: false
+      add :password_hash, :string, null: false
       add :status, :boolean, default: false, null: false
-      add :type, :string
-      add :team_id, references(:teams, type: :binary_id)
+      add :right_id, references(:rights, type: :binary_id), null: false
+      add :team_id, references(:teams, type: :binary_id), null: false
       timestamps()
     end
 
