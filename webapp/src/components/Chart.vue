@@ -77,21 +77,26 @@ export default {
       labels: [],
       selectedDateStart: null,
       selectedDateEnd: null,
-      apiurl: "http://localhost:4000/api/hours",
       message: "",
       actionMessageHours: false
     };
   },
 
-
   mounted() {
-    this.requestData();
+    //  this.subscription = this.isUserHours.userSpecificData().subscribe;
+     this.requestData();
   },
 
   computed: {
       isSpecificHours: function() {
         return this.$store.getters.isSpecificHours;
       },
+      isSpecificId: function() {
+        return this.$store.getters.isSpecificId;
+      },
+      isUserHours: function() {
+        return this.$store.getters.isUserHours;
+      }     
   },
 
 
@@ -157,10 +162,19 @@ export default {
         );
         this.loaded = true;
       }
-
     },
 
-  }
+    userSpecificData() {
+      this.resetState()
+      this.hours = this.isUserHours.map(
+        (time) => moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+      );
+      this.labels = this.isUserHours.map((hour) =>
+        moment(hour.end).format("MM-DD")
+      );
+      this.loaded = true;
+    }
+  } 
 }
 
 </script>

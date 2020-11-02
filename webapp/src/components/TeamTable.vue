@@ -1,74 +1,85 @@
 <template>
-  <div id="team-table">
-    <md-table id="team-table-container" v-if="infos">
-      <md-table-row>
-        <md-table-head class="colum-container">Name</md-table-head>
-        <md-table-head class="colum-container">Type</md-table-head>
-        <md-table-head class="colum-container">Team</md-table-head>
-      </md-table-row>
-      <!-- <md-table-row v-for="(info, info.status) in infos" v-if="info.status=true" > -->
+  <div>
+    <div id="team-table">
+      <md-table id="team-table-container" v-if="infos">
+        <md-table-row>
+          <md-table-head class="colum-container">Name</md-table-head>
+          <md-table-head class="colum-container">Type</md-table-head>
+          <md-table-head class="colum-container">Team</md-table-head>
+        </md-table-row>
+        <!-- <md-table-row v-for="(info, info.status) in infos" v-if="info.status=true" > -->
 
 
-      <md-table-row v-for="(info, i) in infos" :key="info.id">
-        <md-table-cell
-          v-if="info.status"
-          v-bind:class="{ active: isInactive.includes(info.id) }"
-          class="colum-container"
-          >{{ info.firstname }} {{ info.lastname }}</md-table-cell
-        >
-        <md-table-cell
-          v-if="info.status"
-          v-bind:class="{ active: isInactive.includes(info.id) }"
-          class="colum-container"
-          >{{ info.type }}</md-table-cell
-        >
-        <md-table-cell
-          v-if="info.status"
-          v-bind:class="{ active: isInactive.includes(info.id) }"
-          class="colum-container"
-        >
-          <md-field>
-            <label for="team">{{ info.team }}</label>
-            <md-select
-              class="team"
-              name="team"
-              :id="info.id"
-              v-model="info[i]"
-              @md-selected="updateTeam(info[i], info)"
-              :key="info.id"
-            >
-              <md-option
-                v-for="team in teams"
-                :key="team.id"
-                :value="team.id"
-                class="colum-container"
-                >{{ team.name }}</md-option
-              >
-            </md-select>
-          </md-field>
-        </md-table-cell>
-        <md-table-cell
-          v-if="info.status"
-          v-bind:class="{ active: isInactive.includes(info.id) }"
-          class="colum-container"
-          ><button
-            @click="
-              updateFalse(info),
-                isInactive.includes(info.id)
-                  ? isInactive.splice(isInactive.indexOf(info.id), 1)
-                  : isInactive.push(info.id)
-            "
-            class="btn-icon-corbeille"
+        <md-table-row v-for="(info, i) in infos" :key="info.id" >
+          <md-table-cell
+            v-if="info.status"
+            v-bind:class="{ active: isInactive.includes(info.id) }"
+            class="colum-container name-user"
+            ><p @click="showSpecificGraphic(info.id)">{{ info.firstname }} {{ info.lastname }}</p></md-table-cell
           >
-            <md-icon class="icon-corbeille">delete</md-icon>
-          </button></md-table-cell
+          <md-table-cell
+            v-if="info.status"
+            v-bind:class="{ active: isInactive.includes(info.id) }"
+            class="colum-container"
+            >{{ info.type }}</md-table-cell
+          >
+          <md-table-cell
+            v-if="info.status"
+            v-bind:class="{ active: isInactive.includes(info.id) }"
+            class="colum-container"
+          >
+            <md-field>
+              <label for="team">{{ info.team }}</label>
+              <md-select
+                class="team"
+                name="team"
+                :id="info.id"
+                v-model="info[i]"
+                @md-selected="updateTeam(info[i], info)"
+                :key="info.id"
+              >
+                <md-option
+                  v-for="team in teams"
+                  :key="team.id"
+                  :value="team.id"
+                  class="colum-container"
+                  >{{ team.name }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </md-table-cell>
+          <md-table-cell
+            v-if="info.status"
+            v-bind:class="{ active: isInactive.includes(info.id) }"
+            class="colum-container"
+            ><button
+              @click="
+                updateFalse(info),
+                  isInactive.includes(info.id)
+                    ? isInactive.splice(isInactive.indexOf(info.id), 1)
+                    : isInactive.push(info.id)
+              "
+              class="btn-icon-corbeille"
+            >
+              <md-icon class="icon-corbeille">delete</md-icon>
+            </button></md-table-cell
+          >
+        </md-table-row>
+      </md-table>
+      <md-snackbar :md-active.sync="actionMessage"
+          > {{message}}</md-snackbar
         >
-      </md-table-row>
-    </md-table>
-    <md-snackbar :md-active.sync="actionMessage"
-        > {{message}}</md-snackbar
-      >
 
+    </div>
+    <p>Team</p>
+    <div>
+      <ul  class="team-list">   
+          <li v-for="team in teams" :key="team.id" :value="team.id" 
+          @click="showSpecificGraphic(team.id)"
+          class="name-team"
+          > {{team.name}} </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -98,10 +109,13 @@ for (var i = 1; i <= 10; i++) {
       teams: null,
       isInactive: [],
       message: "",
-      actionMessage: false
+      actionMessage: false,
+      idGraphicToShow: null,
     }),
 
     methods : {
+
+      // fonction pour supprimer un User de la liste et mettre son status en False en bdd pour ne plus l'affiché dans la liste front
         updateFalse: function (info) {
           const id= info.id
           Axios
@@ -130,14 +144,11 @@ for (var i = 1; i <= 10; i++) {
         },
 
         
-        // fonction qui remet le "status" d'un user en true pour l'afficher dans la liste nécéssite la tab de l'user
+        // fonction pour changer la team un User en Bdd et en front
         updateTeam: function (teamId, info) {
-
-   
           Axios
             .get('http://localhost:4000/api/teams/' + teamId)
             .then(response => (this.teamName = response.data.data.name))
-
 
           Axios
             .put('http://localhost:4000/api/users/'+ info.id, {
@@ -163,6 +174,12 @@ for (var i = 1; i <= 10; i++) {
                 this.actionMessage = true
             });
          },
+
+         showSpecificGraphic: function (id){
+            const user_id = id
+            this.$store
+            .dispatch("getuserhours", {user_id})
+         }
     },
 
     mounted () {
@@ -182,7 +199,7 @@ for (var i = 1; i <= 10; i++) {
 
 #team-table {
   width: 30vw;
-  height: 80vh;
+  height: 70vh;
   overflow: hidden;
   overflow-y: scroll;
 }
@@ -215,6 +232,17 @@ for (var i = 1; i <= 10; i++) {
 
 .team {
   width: 3vw;
+}
+
+.team-list {
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+}
+
+.name-user,
+.name-team {
+  cursor: pointer;
 }
 
 .md-list-item-content {
