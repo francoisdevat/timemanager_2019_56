@@ -30,6 +30,7 @@ defmodule GothamWeb.Router do
     get "/hour", HourController, :hourbytime
     get "/myhours/:user_id", HourController, :hourbyuser
     options "/hours", HourController, :options
+    options "/hour", HourController, :options
     options "/myhours/:user_id", HourController, :options
     options "/hours/:id", HourController, :options
   end
