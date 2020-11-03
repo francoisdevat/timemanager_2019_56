@@ -58,6 +58,7 @@ defmodule GothamWeb.Router do
     get "/hour", HourController, :hourbytime
     # Voir les horaires d'un user
     get "/myhours/:user_id", HourController, :hourbyuser
+    options "/hour", HourController, :options
     options "/myhours/:user_id", HourController, :options
     # Voir les horaires d'une team
     get "/teamhours/:team_id", HourController, :hourbyteam

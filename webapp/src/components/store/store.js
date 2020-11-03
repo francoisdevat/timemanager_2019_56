@@ -18,6 +18,10 @@ export default new Vuex.Store({
     clocks: [],
     all_users: [],
     last_clock: {},
+    specific_hours: [],   
+    specific_id: "",
+    user_hours: [],
+
   },
   mutations: {
     auth_request(state) {
@@ -70,7 +74,20 @@ export default new Vuex.Store({
       state.status = "success";
       state.last_clock = clockage;
     },
+    specific_hours_success(state, specifichours) {
+      state.status = "success";
+      state.specific_hours = specifichours;
+    },
+    specific_id_success(state, user_id) {
+      state.status = "success";
+      state.specific_id = user_id;
+    },
+    user_hours_success(state, userhours){
+      state.status = "success";
+      state.user_hours = userhours;
+    }
   },
+
   actions: {
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
@@ -114,6 +131,7 @@ export default new Vuex.Store({
           });
       });
     },
+
     register({ commit }, donnees) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -145,6 +163,7 @@ export default new Vuex.Store({
           });
       });
     },
+
     logout({ commit }) {
       return new Promise((resolve) => {
         commit("logout");
@@ -153,6 +172,7 @@ export default new Vuex.Store({
         resolve();
       });
     },
+
     getallusers({ commit }) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -172,6 +192,7 @@ export default new Vuex.Store({
           });
       });
     },
+
     getallteams({ commit }) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -190,6 +211,7 @@ export default new Vuex.Store({
           });
       });
     },
+
     getallhours({ commit }) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -212,7 +234,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url: API_URL + `/hour?start=${time.starttime}&end=${time.starttime}`,
+          url: API_URL + `/hour?start=${time.start}&end=${time.end}`,
           method: "GET",
         })
           .then((resp) => {
@@ -230,7 +252,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url: API_URL + "/myhours/" + user_id,
+          url: API_URL + "/myhours/" + user_id.user_id,
           method: "GET",
         })
           .then((resp) => {
@@ -299,11 +321,15 @@ export default new Vuex.Store({
       });
     },
   },
+  
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     isUser: (state) => state.user,
     isClocked: (state) => state.clocks,
     isLastClock: (state) => state.last_clock,
+    isSpecificHours: (state) => state.specific_hours,
+    isSpecificId: (state) => state.specific_id,
+    isUserHours: (state) => state.user_hours,
   },
 });
