@@ -8,8 +8,8 @@ defmodule Gotham.Partners.Team do
   @foreign_key_type :binary_id
   schema "teams" do
     field :name, :string
-    has_many :user, Gotham.Accounts.User
-    has_many :hour, Gotham.Times.Hour
+    has_many :user, User
+    has_many :hour, Hour
     timestamps()
   end
 
