@@ -9,7 +9,7 @@
       >
       <div v-if="this.$store.getters.isLoggedIn" class="md-toolbar-section-end">
         <md-button>{{ isUser.firstname + " " + isUser.lastname }}</md-button>
-        <md-button>General Manager</md-button>
+        <md-button>{{isUser.right}}</md-button>
         <md-button>Team Epitech</md-button>
       </div>
       <div class="md-toolbar-section-end">

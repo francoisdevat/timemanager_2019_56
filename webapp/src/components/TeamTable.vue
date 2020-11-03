@@ -1,88 +1,122 @@
 <template>
-  <div>
-    <div id="team-table">
-      <md-table id="team-table-container" v-if="infos">
-        <md-table-row>
-          <md-table-head class="colum-container">Name</md-table-head>
-          <md-table-head class="colum-container">Type</md-table-head>
-          <md-table-head class="colum-container">Team</md-table-head>
-        </md-table-row>
+  <div v-if="isUser.right != 'employee'">
+    <div id="team-table">  
+          <md-table id="team-table-container" v-if="infos">
+            <md-table-row>
+              <md-table-head class="colum-container">Name</md-table-head>
+              <md-table-head class="colum-container">Type</md-table-head>
+              <md-table-head class="colum-container">Team</md-table-head>
+            </md-table-row>
 
-        <md-table-row v-for="(info, i) in infos" :key="info.id">
-          <md-table-cell
-            v-if="info.status"
-            v-bind:class="{ active: isInactive.includes(info.id) }"
-            class="colum-container name-user"
-            ><p @click="showSpecificGraphic(info.id)">
-              {{ info.firstname }} {{ info.lastname }}
-            </p></md-table-cell
-          >
-          <md-table-cell
-            v-if="info.status"
-            v-bind:class="{ active: isInactive.includes(info.id) }"
-            class="colum-container"
-            >{{ info.type }}</md-table-cell
-          >
-          <md-table-cell
-            v-if="info.status"
-            v-bind:class="{ active: isInactive.includes(info.id) }"
-            class="colum-container"
-          >
-            <md-field>
-              <label for="team">{{ info.team }}</label>
-              <md-select
-                class="team"
-                name="team"
-                :id="info.id"
-                v-model="info[i]"
-                @md-selected="updateTeam(info[i], info)"
-                :key="info.id"
+            <md-table-row v-for="(info, i) in infos" :key="info.id">
+              <md-table-cell
+                v-if="info.status"
+                v-bind:class="{ active: isInactive.includes(info.id) }"
+                class="colum-container name-user"
+                ><p @click="showSpecificGraphic(info.id)">
+                  {{ info.firstname }} {{ info.lastname }}
+                </p></md-table-cell
               >
-                <md-option
-                  v-for="team in teams"
-                  :key="team.id"
-                  :value="team.id"
+
+              <div v-if="isUser.right != 'general manager'">
+                <md-table-cell
+                  v-if="info.status"
+                  v-bind:class="{ active: isInactive.includes(info.id) }"
                   class="colum-container"
-                  >{{ team.name }}</md-option
+                  >{{ info.right }}</md-table-cell
                 >
-              </md-select>
-            </md-field>
-          </md-table-cell>
-          <md-table-cell
-            v-if="info.status"
-            v-bind:class="{ active: isInactive.includes(info.id) }"
-            class="colum-container"
-            ><button
-              @click="
-                updateFalse(info),
-                  isInactive.includes(info.id)
-                    ? isInactive.splice(isInactive.indexOf(info.id), 1)
-                    : isInactive.push(info.id)
-              "
-              class="btn-icon-corbeille"
+              </div>
+
+              <div v-if="isUser.right != 'manager'">
+                <md-table-cell
+                  v-if="info.status"
+                  v-bind:class="{ active: isInactive.includes(info.id) }"
+                  class="colum-container"
+                >
+                  <md-field>
+                    <label for="right">{{ infos[i].right }}</label>
+                    <md-select
+                      class="right"
+                      name="right"
+                      :id="info.id"
+                      v-model="infos[i].right_id"
+                      @md-selected="updateRight(infos[i].right_id, info)"
+                      :key="info.id"
+                    >
+                      <md-option
+                        v-for="right in rights"
+                        :key="right.id"
+                        :value="right.id"
+                        class="colum-container"
+                        >{{ right.name }}</md-option
+                      >
+                    </md-select>
+                  </md-field>
+                </md-table-cell>
+              </div>
+
+              <md-table-cell
+                v-if="info.status"
+                v-bind:class="{ active: isInactive.includes(info.id) }"
+                class="colum-container"
+              >
+                <md-field>
+                  <label for="team">{{ info.team }}</label>
+                  <md-select
+                    class="team"
+                    name="team"
+                    :id="info.id"
+                    v-model="info[i]"
+                    @md-selected="updateTeam(info[i], info)"
+                    :key="info.id"
+                  >
+                    <md-option
+                      v-for="team in teams"
+                      :key="team.id"
+                      :value="team.id"
+                      class="colum-container"
+                      >{{ team.name }}</md-option
+                    >
+                  </md-select>
+                </md-field>
+              </md-table-cell>
+
+              <md-table-cell
+                v-if="info.status"
+                v-bind:class="{ active: isInactive.includes(info.id) }"
+                class="colum-container"
+                ><button
+                  @click="
+                    updateFalse(info),
+                      isInactive.includes(info.id)
+                        ? isInactive.splice(isInactive.indexOf(info.id), 1)
+                        : isInactive.push(info.id)
+                  "
+                  class="btn-icon-corbeille"
+                >
+                  <md-icon class="icon-corbeille">delete</md-icon>
+                </button></md-table-cell
+              >
+            </md-table-row>
+          </md-table>
+          <md-snackbar :md-active.sync="actionMessage"> {{ message }}</md-snackbar>
+        </div>
+        <p>Team</p>
+        <div>
+          <ul class="team-list">
+            <li
+              v-for="team in teams"
+              :key="team.id"
+              :value="team.id"
+              @click="showSpecificGraphic(team.id)"
+              class="name-team"
             >
-              <md-icon class="icon-corbeille">delete</md-icon>
-            </button></md-table-cell
-          >
-        </md-table-row>
-      </md-table>
-      <md-snackbar :md-active.sync="actionMessage"> {{ message }}</md-snackbar>
+              {{ team.name }}
+            </li>
+          </ul>
+        </div>
+      
     </div>
-    <p>Team</p>
-    <div>
-      <ul class="team-list">
-        <li
-          v-for="team in teams"
-          :key="team.id"
-          :value="team.id"
-          @click="showSpecificGraphic(team.id)"
-          class="name-team"
-        >
-          {{ team.name }}
-        </li>
-      </ul>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -107,13 +141,20 @@ export default {
     status: null,
     team: null,
     id: null,
-    type: null,
+    right: null,
     teams: null,
+    rights: null,
     isInactive: [],
     message: "",
     actionMessage: false,
     idGraphicToShow: null,
   }),
+
+    computed: {
+    isUser: function() {
+      return this.$store.getters.isUser;
+    },
+  },
 
   methods: {
     updateFalse: function(info) {
@@ -126,7 +167,7 @@ export default {
           password: info.password_hash,
           status: false,
           team_id: info.team_id,
-          type: info.type,
+          right: info.right,
           team: info.team,
         },
       })
@@ -148,6 +189,9 @@ export default {
     },
 
     updateTeam: function(teamId, info) {
+      console.log(teamId)
+      console.log(info)
+
       Axios.get("http://localhost:4000/api/teams/" + teamId).then(
         (response) => (this.teamName = response.data.data.name)
       );
@@ -160,8 +204,44 @@ export default {
           password: info.password_hash,
           status: info.status,
           team_id: teamId,
-          type: info.type,
+          right_id: info.right_id,
+          right: info.right,
           team: this.teamName,
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.message =
+              "The team of user " +
+              info.firstname +
+              " " +
+              info.lastname +
+              " has successfully been changed!";
+            this.actionMessage = true;
+          }
+        })
+        .catch(() => {
+          this.message = "An error has occured, please try again";
+          this.actionMessage = true;
+        });
+    },
+
+    updateRight: function(rightId, info) {
+      Axios.get("http://localhost:4000/api/rights/" + rightId).then(
+        (response) => (this.rightName = response.data.data.name)
+      );
+
+      Axios.put("http://localhost:4000/api/users/" + info.id, {
+        user: {
+          email: info.email,
+          firstname: info.firstname,
+          lastname: info.lastname,
+          password: info.password_hash,
+          status: info.status,
+          team_id: info.team_id,
+          right_id: rightId,
+          right: this.rightName,
+          team: info.name,
         },
       })
         .then((response) => {
@@ -199,6 +279,13 @@ export default {
       .dispatch("getallteams")
       .then((response) => {
         this.teams = response.data.data;
+      })
+      .catch((error) => console.log(error));
+
+    this.$store
+      .dispatch("getallrights")
+      .then((response) => {
+        this.rights = response.data.data;
       })
       .catch((error) => console.log(error));
   },
