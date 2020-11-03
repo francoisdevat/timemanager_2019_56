@@ -43,7 +43,11 @@ defmodule GothamWeb.Router do
 
     # CRUD pointages
     resources "/clocks", ClockController, only: [:index, :show, :create, :update, :delete]
+    get "/lastclock/:user_id", ClockController, :lastclock
+    get "/myclocks/:user_id", ClockController, :clockbyuser
     options "/clocks", ClockController, :options
+    options "/myclocks/:user_id", ClockController, :options
+    options "/lastclock/:user_id", ClockController, :options
     options "/clocks/:id", ClockController, :options
 
     # CRUD hours
