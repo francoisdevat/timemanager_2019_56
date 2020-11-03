@@ -3,7 +3,7 @@ version: '3.7'
 services:
     phoenix:
         environment: 
-            MIX_ENV: dev 
+            MIX_ENV: dev
         build: .
         volumes:
             - ./src:/app
@@ -22,4 +22,4 @@ services:
         ports: 
             - '5432:5432'
     
-       
+    
