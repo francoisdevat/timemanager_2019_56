@@ -5,11 +5,10 @@ defmodule Gotham.Accounts do
 
   import Ecto.Query, warn: false
   alias Gotham.Repo
-
   alias Gotham.Accounts.User
-  alias Gotham.Partners.Team
   alias Gotham.Guardian
   require Logger
+  
   @doc """
   Returns the list of users.
 

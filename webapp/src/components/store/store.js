@@ -21,7 +21,6 @@ export default new Vuex.Store({
     specific_hours: [],   
     specific_id: "",
     user_hours: [],
-
   },
   mutations: {
     auth_request(state) {
@@ -74,18 +73,10 @@ export default new Vuex.Store({
       state.status = "success";
       state.last_clock = clockage;
     },
-    specific_hours_success(state, specifichours) {
-      state.status = "success";
-      state.specific_hours = specifichours;
-    },
     specific_id_success(state, user_id) {
       state.status = "success";
       state.specific_id = user_id;
     },
-    user_hours_success(state, userhours){
-      state.status = "success";
-      state.user_hours = userhours;
-    }
   },
 
   actions: {
