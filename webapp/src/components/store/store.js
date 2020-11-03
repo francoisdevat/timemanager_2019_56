@@ -12,11 +12,16 @@ export default new Vuex.Store({
     user: {},
     teams: [],
     hours: [],
+    userhours: [],
+    teamhours: [],
+    specifichours: [],
     clocks: [],
     all_users: [],
+    last_clock: {},
     specific_hours: [],   
     specific_id: "",
     user_hours: [],
+
   },
   mutations: {
     auth_request(state) {
@@ -41,9 +46,21 @@ export default new Vuex.Store({
       state.status = "success";
       state.teams = teams;
     },
+    user_hours_success(state, userhours) {
+      state.status = "success";
+      state.userhours = userhours;
+    },
     hours_success(state, hours) {
       state.status = "success";
       state.hours = hours;
+    },
+    team_hours_success(state, teamhours) {
+      state.status = "success";
+      state.teamhours = teamhours;
+    },
+    specific_hours_success(state, specifichours) {
+      state.status = "success";
+      state.specifichours = specifichours;
     },
     clocks_success(state, clocks) {
       state.status = "success";
@@ -52,6 +69,10 @@ export default new Vuex.Store({
     all_users_success(state, all_users) {
       state.status = "success";
       state.all_users = all_users;
+    },
+    last_clock_success(state, clockage) {
+      state.status = "success";
+      state.last_clock = clockage;
     },
     specific_hours_success(state, specifichours) {
       state.status = "success";
@@ -85,6 +106,21 @@ export default new Vuex.Store({
               .then((response) => {
                 const my_user = response.data;
                 commit("auth_success_user", my_user);
+                // ***
+                axios({
+                  url: API_URL + "/lastclock/" + response.data.id,
+                  method: "GET",
+                })
+                  .then((rep) => {
+                    const lastclockage = rep.data.data;
+                    commit("last_clock_success", lastclockage);
+                    resolve(rep);
+                  })
+                  .catch((err) => {
+                    commit("auth_error");
+                    reject(err);
+                  });
+                  // ****
               });
             resolve(resp);
           })
@@ -194,7 +230,6 @@ export default new Vuex.Store({
           });
       });
     },
-
     getspecifichours({ commit }, time) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -213,26 +248,6 @@ export default new Vuex.Store({
           });
       });
     },
-
-    // getuserhours({ commit }, user_id) {
-    //   return new Promise((resolve, reject) => {
-    //     commit("auth_request");
-    //     axios({
-    //       url: API_URL + "/myhours/" + user_id,
-    //       method: "GET",
-    //     })
-    //       .then((resp) => {
-    //         const userhours = resp.data;
-    //         commit("user_hours_success", userhours);
-    //         resolve(resp);
-    //       })
-    //       .catch((err) => {
-    //         commit("auth_error");
-    //         reject(err);
-    //       });
-    //   });
-    // },
-
     getuserhours({ commit }, user_id) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -250,13 +265,69 @@ export default new Vuex.Store({
             reject(err);
           });
       });
-    }
+    },
+    getteamhours({ commit }, team_id) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + "/teamhours/" + team_id,
+          method: "GET",
+        })
+          .then((resp) => {
+            const teamhours = resp.data;
+            commit("team_hours_success", teamhours);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+    clockin({ commit }, clock) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios
+          .post(API_URL + "/clocks", {
+            clock: clock,
+          })
+          .then((resp) => {
+            const clockage = resp.data;
+            commit("clocks_success", clockage);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+    lastclock({ commit }, user_id) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + "/lastclock/" + user_id,
+          method: "GET",
+        })
+          .then((resp) => {
+            const lastclockage = resp.data;
+            commit("last_clock_success", lastclockage);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
   },
   
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     isUser: (state) => state.user,
+    isClocked: (state) => state.clocks,
+    isLastClock: (state) => state.last_clock,
     isSpecificHours: (state) => state.specific_hours,
     isSpecificId: (state) => state.specific_id,
     isUserHours: (state) => state.user_hours,

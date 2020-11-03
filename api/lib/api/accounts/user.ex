@@ -1,6 +1,10 @@
 defmodule Gotham.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Gotham.Partners.Team
+  alias Gotham.Owner.Right
+  alias Gotham.Pointers.Clock
+  alias Gotham.Times.Hour
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,19 +14,19 @@ defmodule Gotham.Accounts.User do
     field :lastname, :string
     field :password_hash, :string
     field :status, :boolean, default: false
-    field :type, :string
-    belongs_to :team, Gotham.Partners.Team, foreign_key: :team_id, type: :binary_id
+    belongs_to :team, Team, foreign_key: :team_id, type: :binary_id
+    belongs_to :right, Right, foreign_key: :right_id, type: :binary_id
     field :password, :string, virtual: true
-    has_many :clock, Gotham.Pointers.Clock
-    has_many :hour, Gotham.Times.Hour
+    has_many :clock, Clock
+    has_many :hour, Hour
     timestamps()
   end
 
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :firstname, :lastname, :password, :status, :type, :team_id])
-    |> validate_required([:email, :firstname, :lastname, :password, :status, :type, :team_id])
+    |> cast(attrs, [:email, :firstname, :lastname, :password, :status, :team_id, :right_id])
+    |> validate_required([:email, :firstname, :lastname, :password, :status])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
     |> put_password_hash

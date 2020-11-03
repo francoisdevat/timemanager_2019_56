@@ -43,7 +43,7 @@ defmodule Gotham.Times do
    from(h in Hour,
    where: h.user_id == ^user_id)
    |> Repo.all
-   |> Repo.preload(:user)
+   |> Repo.preload([:user, :team])
   end
   
   def get_hourbyteam!(team_id) do
@@ -58,7 +58,7 @@ defmodule Gotham.Times do
     where: h.start > ^start,
     where: h.end < ^endtime)
     |> Repo.all
-    |> Repo.preload(:user)
+    |> Repo.preload([:user, :team])
   end
   
   @doc """

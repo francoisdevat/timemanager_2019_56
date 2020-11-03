@@ -1,6 +1,7 @@
 <template>
   <div class="content">
     <div class="container">
+
       <!-- <div class="Search__container">
         <input
           class="Search__input"
@@ -42,11 +43,6 @@
             :chart-data="hours"
             :chart-labels="labels"
           ></line-chart>
-          <!-- <bar-chart
-            v-if="loaded"
-            :chart-data="hours"
-            :chart-labels="labels"
-          ></bar-chart> -->
         </div>
       </div>
     </div>
@@ -56,15 +52,12 @@
 
 
 <script>
-// import axios from "axios";
-// import BarChart from "./LineChart";
 import LineChart from "./LineChart";
 const moment = require("moment");
 
 
 export default {
   components: {
-    // BarChart,
     LineChart,
   },
 
@@ -79,6 +72,7 @@ export default {
       selectedDateEnd: null,
       message: "",
       actionMessageHours: false
+
     };
   },
 
@@ -99,13 +93,10 @@ export default {
       }     
   },
 
-
-
   methods: {
 
     resetState() {
       this.loaded = false;
-      this.showError = false;
     },
 
     selectDate(selectedDateStart, selectedDateEnd){

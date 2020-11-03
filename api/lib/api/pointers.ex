@@ -39,7 +39,16 @@ defmodule Gotham.Pointers do
 
   # def get_clockbyuserid!(user_id), do: Repo.get_by!(Clock, user_id: user_id)
 
-  def get_clockbyteamid!(team_id), do: Repo.get_by!(Clock, team_id: team_id)
+  def get_clockbyuser!(user_id), do: Repo.get_by!(Clock, user_id: user_id)
+
+  def get_lastclock!(user_id) do
+    from(c in Clock,
+    where: c.user_id == ^user_id,
+    order_by: [desc: c.time],
+    limit: 1)
+    |> Repo.one
+    |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a clock.

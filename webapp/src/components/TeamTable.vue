@@ -181,18 +181,25 @@ for (var i = 1; i <= 10; i++) {
             .dispatch("getuserhours", {user_id})
          }
     },
+  },
 
-    mounted () {
-      Axios
-        .get('http://localhost:4000/api/users')
-        .then(response => (this.infos = response.data.data))
+  mounted() {
+    this.$store
+      .dispatch("getallusers")
+      .then((response) => {
+        this.infos = response.data.data;
+      })
+      .catch((error) => console.log(error));
 
-      Axios
-        .get('http://localhost:4000/api/teams')
-        .then(response => (this.teams = response.data.data))
-    }
-  }
-  
+
+    this.$store
+      .dispatch("getallteams")
+      .then((response) => {
+        this.teams = response.data.data;
+      })
+      .catch((error) => console.log(error));
+  },
+};
 </script>
 
 <style>
