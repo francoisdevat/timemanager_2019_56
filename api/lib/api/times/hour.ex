@@ -9,8 +9,8 @@ defmodule Gotham.Times.Hour do
   schema "hours" do
     field :end, :naive_datetime
     field :start, :naive_datetime
-    belongs_to :user, Gotham.Accounts.User, foreign_key: :user_id, type: :binary_id
-    belongs_to :team, Gotham.Partners.Team, foreign_key: :team_id, type: :binary_id
+    belongs_to :user, User, foreign_key: :user_id, type: :binary_id
+    belongs_to :team, Team, foreign_key: :team_id, type: :binary_id
     timestamps()
   end
 

@@ -7,7 +7,7 @@ defmodule Gotham.Owner.Right do
   @foreign_key_type :binary_id
   schema "rights" do
     field :name, :string
-    has_many :user, Gotham.Accounts.User
+    has_many :user, User
     timestamps()
   end
 

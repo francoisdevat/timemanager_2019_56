@@ -8,7 +8,7 @@ defmodule Gotham.Pointers.Clock do
   schema "clocks" do
     field :status, :boolean, default: false
     field :time, :naive_datetime
-    belongs_to :user, Gotham.Accounts.User, foreign_key: :user_id, type: :binary_id
+    belongs_to :user, User, foreign_key: :user_id, type: :binary_id
     timestamps()
   end
 
