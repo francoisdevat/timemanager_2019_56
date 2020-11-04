@@ -1,122 +1,135 @@
 <template>
-  <div v-if="isUser.right != 'employee'" class="team-table-component">
-    <div class="team-list-container">
-      <h3 class="title-team">TEAM LIST :</h3>
-      <div>
-        <ul class="team-list">
-          <li
-            v-for="team in teams"
-            :key="team.id"
-            :value="team.id"
-            @click="showSpecificGraphic(team.id)"
-            class="name-team"
-          >
-            {{ team.name }}
-          </li>
-        </ul>
+  <div>
+    <div v-if="isUser.right != 'employee'" class="team-table-component">
+      <div class="team-list-container">
+        <h3 class="title-team">TEAM LIST :</h3>
+        <div>
+          <ul class="team-list">
+            <li
+              v-for="team in teams"
+              :key="team.id"
+              :value="team.id"
+              @click="showSpecificGraphic(team.id)"
+              class="name-team"
+            >
+              {{ team.name }}
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div id="team-table">  
-          <md-table id="team-table-container" v-if="infos">
-            <md-table-row>
-              <md-table-head class="colum-container table-head-font">Name</md-table-head>
-              <md-table-head class="colum-container table-head-font">Type</md-table-head>
-              <md-table-head class="colum-container table-head-font">Team</md-table-head>
-            </md-table-row>
+      <div id="team-table">
+        <md-table id="team-table-container" v-if="infos">
+          <md-table-row>
+            <md-table-head class="colum-container table-head-font"
+              >Name</md-table-head
+            >
+            <md-table-head class="colum-container table-head-font"
+              >Type</md-table-head
+            >
+            <md-table-head class="colum-container table-head-font"
+              >Team</md-table-head
+            >
+          </md-table-row>
 
-            <md-table-row v-for="(info, i) in infos" :key="info.id"  class="table-row-container">
+          <md-table-row
+            v-for="(info, i) in infos"
+            :key="info.id"
+            class="table-row-container"
+          >
+            <md-table-cell
+              v-if="info.status"
+              v-bind:class="{ active: isInactive.includes(info.id) }"
+              class="colum-container name-user table-cellule"
+              ><p @click="showSpecificGraphic(info.id)">
+                {{ info.firstname }} {{ info.lastname }}
+              </p></md-table-cell
+            >
+
+            <div v-if="isUser.right != 'general manager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
-                class="colum-container name-user table-cellule"
-                ><p @click="showSpecificGraphic(info.id)">
-                  {{ info.firstname }} {{ info.lastname }}
-                </p></md-table-cell
+                class="colum-container table-cellule"
+                >{{ info.right }}</md-table-cell
               >
+            </div>
 
-              <div v-if="isUser.right != 'general manager'">
-                <md-table-cell
-                  v-if="info.status"
-                  v-bind:class="{ active: isInactive.includes(info.id) }"
-                  class="colum-container table-cellule"
-                  >{{ info.right }}</md-table-cell
-                >
-              </div>
-
-              <div v-if="isUser.right != 'manager'">
-                <md-table-cell
-                  v-if="info.status"
-                  v-bind:class="{ active: isInactive.includes(info.id) }"
-                  class="colum-container table-cellule"
-                >
-                  <md-field>
-                    <label for="right">{{ infos[i].right }}</label>
-                    <md-select
-                      class="right"
-                      name="right"
-                      :id="info.id"
-                      v-model="infos[i].right_id"
-                      @md-selected="updateRight(infos[i].right_id, info)"
-                      :key="info.id"
-                    >
-                      <md-option
-                        v-for="right in rights"
-                        :key="right.id"
-                        :value="right.id"
-                        class="colum-container"
-                        >{{ right.name }}</md-option
-                      >
-                    </md-select>
-                  </md-field>
-                </md-table-cell>
-              </div>
-
+            <div v-if="isUser.right != 'manager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
                 class="colum-container table-cellule"
               >
                 <md-field>
-                  <label for="team">{{ info.team }}</label>
+                  <label for="right">{{ infos[i].right }}</label>
                   <md-select
-                    class="team"
-                    name="team"
+                    class="right"
+                    name="right"
                     :id="info.id"
-                    v-model="info[i]"
-                    @md-selected="updateTeam(info[i], info)"
+                    v-model="infos[i].right_id"
+                    @md-selected="updateRight(infos[i].right_id, info)"
                     :key="info.id"
                   >
                     <md-option
-                      v-for="team in teams"
-                      :key="team.id"
-                      :value="team.id"
+                      v-for="right in rights"
+                      :key="right.id"
+                      :value="right.id"
                       class="colum-container"
-                      >{{ team.name }}</md-option
+                      >{{ right.name }}</md-option
                     >
                   </md-select>
                 </md-field>
               </md-table-cell>
+            </div>
 
-              <md-table-cell
-                v-if="info.status"
-                v-bind:class="{ active: isInactive.includes(info.id) }"
-                class="colum-container table-cellule"
-                ><button
-                  @click="
-                    updateFalse(info),
-                      isInactive.includes(info.id)
-                        ? isInactive.splice(isInactive.indexOf(info.id), 1)
-                        : isInactive.push(info.id)
-                  "
-                  class="btn-icon-corbeille"
+            <md-table-cell
+              v-if="info.status"
+              v-bind:class="{ active: isInactive.includes(info.id) }"
+              class="colum-container table-cellule"
+            >
+              <md-field>
+                <label for="team">{{ info.team }}</label>
+                <md-select
+                  class="team"
+                  name="team"
+                  :id="info.id"
+                  v-model="info[i]"
+                  @md-selected="updateTeam(info[i], info)"
+                  :key="info.id"
                 >
-                  <md-icon class="icon-corbeille">delete</md-icon>
-                </button></md-table-cell
+                  <md-option
+                    v-for="team in teams"
+                    :key="team.id"
+                    :value="team.id"
+                    class="colum-container"
+                    >{{ team.name }}</md-option
+                  >
+                </md-select>
+              </md-field>
+            </md-table-cell>
+
+            <md-table-cell
+              v-if="info.status"
+              v-bind:class="{ active: isInactive.includes(info.id) }"
+              class="colum-container table-cellule"
+              ><button
+                @click="
+                  updateFalse(info),
+                    isInactive.includes(info.id)
+                      ? isInactive.splice(isInactive.indexOf(info.id), 1)
+                      : isInactive.push(info.id)
+                "
+                class="btn-icon-corbeille"
               >
-            </md-table-row>
-          </md-table>
-          <md-snackbar :md-active.sync="actionMessage"> {{ message }}</md-snackbar>
-        </div>      
+                <md-icon class="icon-corbeille">delete</md-icon>
+              </button></md-table-cell
+            >
+          </md-table-row>
+        </md-table>
+        <md-snackbar :md-active.sync="actionMessage">
+          {{ message }}</md-snackbar
+        >
+      </div>
     </div>
     <p>Team</p>
     <div>
@@ -261,9 +274,7 @@ export default {
 </script>
 
 <style>
-
 #team-table {
-
   width: 100%;
   height: 70vh;
   overflow: hidden;
@@ -297,7 +308,7 @@ export default {
 
 .name-user:hover,
 .name-team:hover {
-  color:cornflowerblue;
+  color: cornflowerblue;
 }
 .name-team:hover {
   font-style: italic;
@@ -307,23 +318,23 @@ export default {
   font-size: 15px;
 }
 
-@media only screen and (max-width:1433px) {
+@media only screen and (max-width: 1433px) {
   .team-list-container {
     margin-top: 15vw;
   }
 }
 
-@media only screen and (max-width:1280px) {
+@media only screen and (max-width: 1280px) {
   .team-list-container {
     margin-top: 20vw;
   }
 }
-@media only screen and (max-width:1200px) {
+@media only screen and (max-width: 1200px) {
   .team-list-container {
     margin-top: 30vw;
   }
 }
-@media only screen and (max-width:1000px) {
+@media only screen and (max-width: 1000px) {
   .team-list-container {
     margin-top: 40vw;
   }
@@ -331,5 +342,5 @@ export default {
 
 .active {
   display: none;
-} 
+}
 </style>
