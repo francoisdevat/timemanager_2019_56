@@ -5,10 +5,10 @@
         <md-icon>menu</md-icon>
       </md-button>
       <span class="md-title">Gotham City Hall</span>
-      <div v-if="this.$store.getters.isLoggedIn" class="md-toolbar-section-end">
-        <md-button>{{ isUser.firstname + " " + isUser.lastname }}</md-button>
-        <md-button>{{ isUser.right }}</md-button>
-        <md-button>{{ isUser.team }}</md-button>
+      <div v-if="user" class="md-toolbar-section-end">
+        <md-button>{{ user.firstname + " " + user.lastname }}</md-button>
+        <md-button>{{ user.right }}</md-button>
+        <md-button>{{ user.team }}</md-button>
       </div>
       <div class="md-toolbar-section-end">
         <md-button
@@ -34,14 +34,14 @@
           >
         </md-list-item>
 
-        <md-list-item>
+        <md-list-item v-if="!isLoggedIn">
           <md-icon>move_to_inbox</md-icon>
           <router-link to="/register"
             ><span class="md-list-item-text">Register</span></router-link
           >
         </md-list-item>
 
-        <md-list-item>
+        <md-list-item v-if="!isLoggedIn">
           <md-icon>error</md-icon>
           <router-link to="/login"
             ><span class="md-list-item-text">Login</span></router-link
@@ -67,7 +67,7 @@
             ><span class="md-list-item-text">Chart</span></router-link
           >
         </md-list-item>
-        <md-list-item>
+        <md-list-item v-if="isLoggedIn">
           <md-icon>move_to_inbox</md-icon>
           <span class="md-list-item-text" @click="logout()">Logout</span>
         </md-list-item>
@@ -95,28 +95,21 @@ export default {
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn;
     },
-    isUser: function() {
-      return this.$store.getters.isUser;
-    },
   },
   methods: {
     logout: function() {
       this.$store.dispatch("logout").then(() => {
+        this.user = null;
         this.$router.push("/login");
       });
     },
   },
-  async mounted() {},
-  created: function() {
-    // this.$http.interceptors.response.use(undefined, function (err) {
-    //   // return new Promise(function (resolve, reject) {
-    //   return new Promise(function () {
-    //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-    //       this.$store.dispatch("logout")
-    //     }
-    //     throw err;
-    //   });
-    // });
+  mounted() {
+    if (localStorage.getItem("token")) {
+      this.$store.dispatch("getuser").then((response) => {
+        this.user = response;
+      });
+    }
   },
 };
 </script>
