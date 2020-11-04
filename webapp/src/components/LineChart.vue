@@ -51,11 +51,11 @@ export default {
         datasets: [
           {
             label: "hours worked",
-            borderColor: "#249EBF",
-            pointBackgroundColor: "white",
+            borderColor: "black",
+            pointBackgroundColor: "black",
             borderWidth: 1,
-            pointBorderColor: "#249EBF",
-            backgroundColor: "#448AFF",
+            pointBorderColor: "black",
+            backgroundColor: "cornflowerblue",
             data: this.chartData,
           },
         ],

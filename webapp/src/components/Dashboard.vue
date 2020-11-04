@@ -114,13 +114,21 @@ export default {
   height: 80px;
 }
 .large {
-  position: absolute;
-  left: 60%;
-  /* top: -6%; */
-  transform: translateX(-50%);
+    position: absolute;
+    left: 80%;
+    top: -10%;
+    transform: translateX(-50%);
+    z-index: 1000;
 }
 .red {
   background-color: red !important;
   color: white !important;
 }
+
+@media only screen and (max-width:1433px) {
+  .large {
+    top: 0%;
+  }
+}
+
 </style>

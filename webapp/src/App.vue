@@ -1,6 +1,6 @@
 <template>
   <div class="page-container md-layout-column">
-    <md-toolbar class="md-primary">
+    <md-toolbar>
       <md-button class="md-icon-button" @click="showNavigation = true">
         <md-icon>menu</md-icon>
       </md-button>
@@ -24,23 +24,20 @@
       <md-toolbar class="md-transparent" md-elevation="0">
         <span class="md-title">Menu</span>
       </md-toolbar>
-      <md-list>
+      <md-list class="item-list-menu">
         <md-list-item v-if="isLoggedIn">
-          <md-icon>move_to_inbox</md-icon>
           <router-link to="/account"
             ><span @click="signout" class="md-list-item-text"
               >Account</span
             ></router-link
           >
         </md-list-item>
-
         <md-list-item v-if="!isLoggedIn">
           <md-icon>move_to_inbox</md-icon>
           <router-link to="/register"
             ><span class="md-list-item-text">Register</span></router-link
           >
         </md-list-item>
-
         <md-list-item v-if="!isLoggedIn">
           <md-icon>error</md-icon>
           <router-link to="/login"
@@ -49,20 +46,17 @@
         </md-list-item>
 
         <md-list-item>
-          <md-icon>move_to_inbox</md-icon>
           <router-link to="/dashboard"
             ><span class="md-list-item-text">Dashboard</span></router-link
           >
         </md-list-item>
 
         <md-list-item>
-          <md-icon>move_to_inbox</md-icon>
           <router-link to="/teamtable"
             ><span class="md-list-item-text">Team Table</span></router-link
           >
         </md-list-item>
         <md-list-item>
-          <md-icon>move_to_inbox</md-icon>
           <router-link to="/chart"
             ><span class="md-list-item-text">Chart</span></router-link
           >
@@ -121,8 +115,22 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  min-height: 85vh;
+  min-height: 75vh;
 }
+
+.md-title {
+  font-weight: bold!important;
+}
+
+.md-list {
+    margin: 25%!important;
+    padding: 0;
+}
+
+.item-list-menu {
+  text-align: center;
+}
+
 .page-container {
   min-height: 300px;
   overflow: hidden;
@@ -133,9 +141,7 @@ export default {
   width: 230px;
   max-width: calc(100vw - 125px);
 }
-.md-content {
-  padding: 16px;
-}
+
 .bouton {
   background-color: red !important;
   color: #fff !important;
