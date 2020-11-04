@@ -6,12 +6,15 @@
         @click.native="pickdate"
         >{{ clockTitle }}</md-button
       >
-      <md-content v-if="clockstatus" class="md-elevation-10"
-        >You clocked in on {{ time | moment("MM/DD/YYYY hh:mm") }}</md-content
-      >
-      <md-content v-if="!clockstatus" class="md-elevation-10"
-        >You clocked out on {{ time | moment("MM/DD/YYYY hh:mm") }}</md-content
-      >
+      <div v-if="time">
+        <md-content v-if="clockstatus" class="md-elevation-10"
+          >You clocked in on {{ time | moment("MM/DD/YYYY hh:mm") }}</md-content
+        >
+        <md-content v-if="!clockstatus" class="md-elevation-10"
+          >You clocked out on
+          {{ time | moment("MM/DD/YYYY hh:mm") }}</md-content
+        >
+      </div>
     </div>
     <div class="md-layout">
       <div class="md-layout-item">
@@ -52,11 +55,15 @@ export default {
       this.$store
         .dispatch("lastclock", user_id)
         .then((response) => {
-          this.time = response.data.data.time;
-          this.clockstatus = response.data.data.status;
-          console.log(response.data.data.status)
-          if (response.data.data.status) {
-            this.clockTitle = "Clock out";
+          if (response.data.length > 0) {
+            this.time = response.data.data.time;
+            this.clockstatus = response.data.data.status;
+            console.log(response.data);
+            if (response.data.data.status) {
+              this.clockTitle = "Clock out";
+            } else {
+              this.clockTitle = "Clock in";
+            }
           } else {
             this.clockTitle = "Clock in";
           }
@@ -73,7 +80,7 @@ export default {
     },
     pickdate: function() {
       const user_id = this.isUser.id;
-      console.log(this.clockstatus)
+      console.log(this.clockstatus);
       const status = !this.clockstatus;
       const time = moment().format("YYYY-MM-DD" + "T" + "HH:mm:ss");
       if (status) {

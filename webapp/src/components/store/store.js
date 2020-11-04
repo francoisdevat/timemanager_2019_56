@@ -93,16 +93,6 @@ export default new Vuex.Store({
             const token = resp.data.jwt;
             localStorage.setItem("token", token);
             commit("auth_success_token", token);
-            axios
-              .get(API_URL + "/my_user", {
-                headers: {
-                  authorization: `Bearer ${token}`,
-                },
-              })
-              .then((response) => {
-                const my_user = response.data;
-                commit("auth_success_user", my_user);
-              });
             resolve(resp);
           })
           .catch((err) => {
@@ -113,7 +103,30 @@ export default new Vuex.Store({
       });
     },
 
+    getuser({ commit }) {
+      return new Promise((resolve, reject) => {
+        const token = localStorage.getItem("token");
+        axios
+          .get(API_URL + "/my_user", {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            const my_user = response.data;
+            commit("auth_success_user", my_user);
+            resolve(response.data);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            localStorage.removeItem("token");
+            reject(err);
+          });
+      });
+    },
+
     register({ commit }, donnees) {
+      console.log(donnees);
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios
@@ -168,7 +181,6 @@ export default new Vuex.Store({
           })
           .catch((err) => {
             commit("auth_error");
-            localStorage.removeItem("token");
             reject(err);
           });
       });
@@ -227,7 +239,7 @@ export default new Vuex.Store({
     },
 
     updateuserstatus({ commit }, user) {
-      console.log(user.info.id)
+      console.log(user.info.id);
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios
