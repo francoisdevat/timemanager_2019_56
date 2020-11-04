@@ -53,8 +53,8 @@ export default {
   mounted() {
     this.clocked = this.isLastClock.status;
     this.selectedDate = this.isLastClock.time;
-    console.log(this.isLastClock.time);
-    console.log(this.isLastClock.status);
+    // console.log(this.isLastClock.time);
+    // console.log(this.isLastClock.status);
     if (this.isLastClock.status) {
       this.clockTitle = "Clock out";
     } else {
