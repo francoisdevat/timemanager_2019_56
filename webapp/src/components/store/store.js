@@ -11,6 +11,7 @@ export default new Vuex.Store({
     token: localStorage.getItem("token") || "",
     user: {},
     teams: [],
+    rights: [],
     hours: [],
     userhours: [],
     teamhours: [],
@@ -44,6 +45,10 @@ export default new Vuex.Store({
     teams_success(state, teams) {
       state.status = "success";
       state.teams = teams;
+    },
+    rights_success(state, rights) {
+      state.status = "success";
+      state.rights = rights;
     },
     user_hours_success(state, userhours) {
       state.status = "success";
@@ -195,6 +200,25 @@ export default new Vuex.Store({
           .then((resp) => {
             const teams = resp.data;
             commit("teams_success", teams);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+
+    getallrights({ commit }) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: API_URL + "/rights",
+          method: "GET",
+        })
+          .then((resp) => {
+            const rights = resp.data;
+            commit("rights_success", rights);
             resolve(resp);
           })
           .catch((err) => {
