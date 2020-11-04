@@ -9,7 +9,7 @@
               v-for="team in teams"
               :key="team.id"
               :value="team.id"
-              @click="showSpecificGraphic(team.id)"
+              @click="showTeamChart(team.id)"
               class="name-team"
             >
               {{ team.name }}
@@ -40,12 +40,12 @@
               v-if="info.status"
               v-bind:class="{ active: isInactive.includes(info.id) }"
               class="colum-container name-user table-cellule"
-              ><p @click="showSpecificGraphic(info.id)">
+              ><p @click="showUserChart(info.id)">
                 {{ info.firstname }} {{ info.lastname }}
               </p></md-table-cell
             >
 
-            <div v-if="isUser.right != 'general manager'">
+            <div v-if="isUser.right != 'generalmanager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
