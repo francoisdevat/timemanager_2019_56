@@ -18,7 +18,7 @@ export default new Vuex.Store({
     clocks: [],
     all_users: [],
     last_clock: {},
-    specific_hours: [],   
+    specific_hours: [],
     specific_id: "",
     user_hours: [],
   },
@@ -47,7 +47,7 @@ export default new Vuex.Store({
     },
     user_hours_success(state, userhours) {
       state.status = "success";
-      state.userhours = userhours;
+      state.user_hours = userhours;
     },
     hours_success(state, hours) {
       state.status = "success";
@@ -98,20 +98,21 @@ export default new Vuex.Store({
                 const my_user = response.data;
                 commit("auth_success_user", my_user);
                 // ***
-                axios({
-                  url: API_URL + "/lastclock/" + response.data.id,
-                  method: "GET",
-                })
-                  .then((rep) => {
-                    const lastclockage = rep.data.data;
-                    commit("last_clock_success", lastclockage);
-                    resolve(rep);
-                  })
-                  .catch((err) => {
-                    commit("auth_error");
-                    reject(err);
-                  });
-                  // ****
+                this.dispatch("lastclock", response.data.id)
+                // axios({
+                //   url: API_URL + "/lastclock/" + response.data.id,
+                //   method: "GET",
+                // })
+                //   .then((rep) => {
+                //     const lastclockage = rep.data.data;
+                //     commit("last_clock_success", lastclockage);
+                //     resolve(rep);
+                //   })
+                //   .catch((err) => {
+                //     commit("auth_error");
+                //     reject(err);
+                //   });
+                // ****
               });
             resolve(resp);
           })
@@ -312,7 +313,7 @@ export default new Vuex.Store({
       });
     },
   },
-  
+
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,

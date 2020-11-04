@@ -1,7 +1,6 @@
 <template>
   <div class="container-large">
     <div class="large">
-
       <md-button class="md-raised md-primary" @click.native="pickdate">{{
         clockTitle
       }}</md-button>
@@ -30,7 +29,6 @@ import TeamTable from "./TeamTable";
 const moment = require("moment");
 
 export default {
-
   components: {
     Chart,
     TeamTable,
@@ -53,8 +51,6 @@ export default {
   mounted() {
     this.clocked = this.isLastClock.status;
     this.selectedDate = this.isLastClock.time;
-    console.log(this.isLastClock.time);
-    console.log(this.isLastClock.status);
     if (this.isLastClock.status) {
       this.clockTitle = "Clock out";
     } else {
@@ -63,7 +59,6 @@ export default {
   },
 
   methods: {
-
     moment: function() {
       return moment();
     },
@@ -92,30 +87,27 @@ export default {
 };
 </script>
 
-
 <style scoped>
-
 .container-large {
   position: relative;
 }
 
 .btn-color {
-  color: white!important;
-  background-color: Green!important;
+  color: white !important;
+  background-color: Green !important;
   width: 95px;
   height: 80px;
 }
 
 .large {
-    position: absolute;
-    left: 60%;
-    top: -6%;
-    transform: translateX(-50%);
+  position: absolute;
+  left: 60%;
+  top: -6%;
+  transform: translateX(-50%);
 }
 
 .red {
   background-color: red !important;
   color: white !important;
 }
-
 </style>
