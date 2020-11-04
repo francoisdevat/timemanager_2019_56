@@ -70,15 +70,24 @@ export default {
     isUserHours: function() {
       return this.$store.getters.isUserHours;
     },
+    isTeamHours: function() {
+      return this.$store.getters.isTeamHours;
+    },
   },
   watch: {
     isUserHours: function() {
       this.userChart();
     },
+    isTeamHours: function() {
+      this.teamChart();
+    },
   },
   methods: {
     forceRerender() {
       this.chartKey += 1;
+    },
+    resetState() {
+      this.loaded = false;
     },
     userChart() {
       this.forceRerender();
@@ -96,8 +105,21 @@ export default {
       }
       this.loaded = true;
     },
-    resetState() {
-      this.loaded = false;
+    teamChart() {
+      this.forceRerender();
+      this.resetState();
+      if (this.isTeamHours.data.length > 0) {
+        this.hours = this.isTeamHours.data.map(
+          (time) => moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+        );
+        this.labels = this.isTeamHours.data.map((hour) =>
+          moment(hour.end).format("MM-DD")
+        );
+      } else {
+        this.message = "This team doesn't have any working hours";
+        this.actionMessageHours = true;
+      }
+      this.loaded = true;
     },
     selectDate(selectedDateStart, selectedDateEnd) {
       if (
