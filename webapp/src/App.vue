@@ -4,13 +4,11 @@
       <md-button class="md-icon-button" @click="showNavigation = true">
         <md-icon>menu</md-icon>
       </md-button>
-      <span class="md-title"
-        >Gotham City Hall</span
-      >
+      <span class="md-title">Gotham City Hall</span>
       <div v-if="this.$store.getters.isLoggedIn" class="md-toolbar-section-end">
         <md-button>{{ isUser.firstname + " " + isUser.lastname }}</md-button>
-        <md-button>{{isUser.right}}</md-button>
-        <md-button>Team Epitech</md-button>
+        <md-button>{{ isUser.right }}</md-button>
+        <md-button>{{ isUser.team }}</md-button>
       </div>
       <div class="md-toolbar-section-end">
         <md-button
