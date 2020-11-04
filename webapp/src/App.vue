@@ -33,13 +33,11 @@
           >
         </md-list-item>
         <md-list-item v-if="!isLoggedIn">
-          <md-icon>move_to_inbox</md-icon>
           <router-link to="/register"
             ><span class="md-list-item-text">Register</span></router-link
           >
         </md-list-item>
         <md-list-item v-if="!isLoggedIn">
-          <md-icon>error</md-icon>
           <router-link to="/login"
             ><span class="md-list-item-text">Login</span></router-link
           >
@@ -60,10 +58,6 @@
           <router-link to="/chart"
             ><span class="md-list-item-text">Chart</span></router-link
           >
-        </md-list-item>
-        <md-list-item v-if="isLoggedIn">
-          <md-icon>move_to_inbox</md-icon>
-          <span class="md-list-item-text" @click="logout()">Logout</span>
         </md-list-item>
       </md-list>
     </md-drawer>

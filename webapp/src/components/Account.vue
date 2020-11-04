@@ -4,7 +4,8 @@
       <md-card class="md-layout-item md-size-50 md-small-size-100 formulaire">
         <md-card-header>
           <div class="md-title" v-if="user">
-            Hello {{ user.firstname + " " + user.lastname }} ! <md-icon>pan_tool</md-icon>
+            Hello {{ user.firstname + " " + user.lastname }} !
+            <md-icon>pan_tool</md-icon>
           </div>
         </md-card-header>
 
@@ -192,11 +193,9 @@ export default {
     },
   },
   async mounted() {
-    await Axios.get("http://localhost:4000/api/users/366c1284-1aca-49d0-8dee-8c78aef1c2a4").then(
-      (response) => {
-        this.user = response.data;
-      }
-    );
+    this.$store.dispatch("getuser").then((response) => {
+      this.user = response;
+    });
   },
 };
 </script>
