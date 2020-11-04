@@ -25,8 +25,13 @@ defmodule GothamWeb.ClockController do
     render(conn, "show.json", clock: clock)
   end
 
-  def clockbyteamid(conn, %{"team_id" => team_id}) do
-    clock = Pointers.get_clockbyteamid!(team_id)
+  def clockbyuser(conn, %{"user_id" => user_id}) do
+    clock = Pointers.get_clockbyuser!(user_id)
+    render(conn, "show.json", clock: clock)
+  end
+
+  def lastclock(conn, %{"user_id" => user_id}) do
+    clock = Pointers.get_lastclock!(user_id)
     render(conn, "show.json", clock: clock)
   end
 

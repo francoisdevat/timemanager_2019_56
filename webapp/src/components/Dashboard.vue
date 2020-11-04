@@ -1,24 +1,17 @@
 <template>
   <div class="container-large">
     <div class="large">
-        <md-button
-          v-if="!pointed"
-          class="md-fab md-primary btn-color"
-          @click.native="pickdate"
-          >Clock in</md-button
-        >
-        <md-button 
-          v-if="pointed" 
-          class="md-fab red btn-color" 
-          @click.native="pickdate"
-          >Clock out</md-button
-        >
-        <md-content 
-          v-if="pointed" 
-          class="md-elevation-10"
-          >You clocked in on
-          {{ selectedDate | moment("MM/DD/YYYY hh:mm") }}</md-content
-        >
+      <md-button class="md-raised md-primary" @click.native="pickdate">{{
+        clockTitle
+      }}</md-button>
+      <md-content v-if="this.isLastClock.status" class="md-elevation-10"
+        >You clocked in on
+        {{ this.isLastClock.time | moment("MM/DD/YYYY hh:mm") }}</md-content
+      >
+      <md-content v-if="!this.isLastClock.status" class="md-elevation-10"
+        >You clocked out on
+        {{ this.isLastClock.time | moment("MM/DD/YYYY hh:mm") }}</md-content
+      >
     </div>
     <div class="md-layout">
       <div class="md-layout-item">
@@ -30,14 +23,12 @@
 </template>
 
 <script>
-// import Axios from "axios";
 import Chart from "./Chart";
 import TeamTable from "./TeamTable";
 
 const moment = require("moment");
 
 export default {
-
   components: {
     Chart,
     TeamTable,
@@ -46,78 +37,81 @@ export default {
   name: "Dashboard",
   data: () => ({
     selectedDate: "",
-    pointed: false,
+    clocked: null,
+    clockTitle: null,
   }),
+  computed: {
+    isUser: function() {
+      return this.$store.getters.isUser;
+    },
+    isLastClock: function() {
+      return this.$store.getters.isLastClock;
+    },
+  },
+  mounted() {
+    this.clocked = this.isLastClock.status;
+    this.selectedDate = this.isLastClock.time;
+
+    // console.log(this.isLastClock.time);
+    // console.log(this.isLastClock.status);
+
+    if (this.isLastClock.status) {
+      this.clockTitle = "Clock out";
+    } else {
+      this.clockTitle = "Clock in";
+    }
+  },
 
   methods: {
-
     moment: function() {
       return moment();
     },
 
     pickdate: function() {
-      this.selectedDate = new Date()
-      // moment(new Date()).format("YYYY-MM-DD-h:mm:ss")
+      console.log(this.isLastClock.status);
+      this.selectedDate = moment();
 
-      console.log(this.selectedDate)
-      if (this.pointed){
-          this.pointed = false;
+      const user_id = this.isUser.id;
+      const status = !this.isLastClock.status;
+      const time = moment().format("YYYY-MM-DD" + "T" + "HH:mm:ss");
+      if (status) {
+        this.clockTitle = "Clock out";
+      } else {
+        this.clockTitle = "Clock in";
       }
-      else {
-          this.pointed = true;
-      }
-      
-      // Axios.post("http://localhost:4000/api/clocks/", {
-      //   clock: {
-      //     status: true,
-      //     time: new Date().toLocaleString(),
-      //     user_id: 1,
-      //   },
-      // })
-      //   .then((response) => {
-      //     if (response.status === 200) {
-      //       this.selectedDate = new Date().toLocaleString();
-      //       this.pointed = true;
-      //     } else {
-      //       //handle error
-      //     }
-      //   })
-      //   .catch((error) => console.log(error));
+      this.$store
+        .dispatch("clockin", { user_id, time, status })
+        .then((response) => {
+          this.clocked = response.data.status;
+          this.selectedDate = response.data.time;
+        })
+        .catch((error) => console.log(error));
     },
-  },
-  async mounted() {
-    // console.log(this.$store.getters.user);
-    // if (!this.$store.getters.user) {
-    //   this.$router.push("login");
-    // }
   },
 };
 </script>
 
-
 <style scoped>
-
 .container-large {
   position: relative;
 }
 
 .btn-color {
-  color: white!important;
-  background-color: Green!important;
+  color: white !important;
+  background-color: Green !important;
   width: 95px;
   height: 80px;
 }
 
 .large {
-    position: absolute;
-    left: 60%;
-    top: -6%;
-    transform: translateX(-50%);
+  position: absolute;
+  left: 60%;
+  top: -6%;
+  transform: translateX(-50%);
 }
 
 .red {
   background-color: red !important;
   color: white !important;
 }
-
 </style>

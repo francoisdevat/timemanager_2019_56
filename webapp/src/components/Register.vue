@@ -134,10 +134,13 @@ export default {
       },
     },
   },
+
   methods: {
+    
     gosignin() {
       this.$router.push("login");
     },
+
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -147,6 +150,7 @@ export default {
         };
       }
     },
+
     clearForm() {
       this.$v.$reset();
       this.form.firstname = null;
@@ -154,6 +158,7 @@ export default {
       this.form.password = null;
       this.form.email = null;
     },
+
     register: function() {
       let donnees = {
         email: this.form.email,
@@ -174,6 +179,7 @@ export default {
         });
       this.clearForm();
     },
+
     saveUser() {
       this.sending = true;
 
@@ -199,6 +205,7 @@ export default {
         this.clearForm();
       }, 1500);
     },
+
     validateUser() {
       this.$v.$touch();
 

@@ -12,9 +12,9 @@ services:
         ports: 
             - '5432:5432'
     api:
-        environment: 
-            MIX_ENV: dev
         build: ./api/
+        env_file:
+            - api/.env
         ports:
             - "4000:4000"
         depends_on:

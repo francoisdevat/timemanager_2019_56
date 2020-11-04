@@ -5,11 +5,10 @@ defmodule Gotham.Accounts do
 
   import Ecto.Query, warn: false
   alias Gotham.Repo
-
   alias Gotham.Accounts.User
-  alias Gotham.Partners.Team
   alias Gotham.Guardian
   require Logger
+  
   @doc """
   Returns the list of users.
 
@@ -21,7 +20,7 @@ defmodule Gotham.Accounts do
   """
   def list_users do
     Repo.all(User)
-    |> Repo.preload(:team)
+    |> Repo.preload([:team, :right])
   end
 
   @doc """
@@ -40,12 +39,12 @@ defmodule Gotham.Accounts do
   """
   def get_user!(id) do
     Repo.get!(User, id)
-    |> Repo.preload(:team)
+    |> Repo.preload([:team, :right])
   end
 
   def login!(email) do
     Repo.get_by!(User, email: email)
-    |> Repo.preload(:team)
+    |> Repo.preload([:team, :right])
   end
   @doc """
   Creates a user.
@@ -62,8 +61,7 @@ defmodule Gotham.Accounts do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
-    |> Repo.insert()
-    |> Repo.preload([:team, :clock, :hour])
+    |> Repo.insert!()
   end
 
   @doc """
