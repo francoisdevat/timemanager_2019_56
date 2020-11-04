@@ -1,18 +1,34 @@
 <template>
-  <div v-if="isUser.right != 'employee'">
+  <div v-if="isUser.right != 'employee'" class="team-table-component">
+    <div class="team-list-container">
+      <h3 class="title-team">TEAM LIST :</h3>
+      <div>
+        <ul class="team-list">
+          <li
+            v-for="team in teams"
+            :key="team.id"
+            :value="team.id"
+            @click="showSpecificGraphic(team.id)"
+            class="name-team"
+          >
+            {{ team.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
     <div id="team-table">  
           <md-table id="team-table-container" v-if="infos">
             <md-table-row>
-              <md-table-head class="colum-container">Name</md-table-head>
-              <md-table-head class="colum-container">Type</md-table-head>
-              <md-table-head class="colum-container">Team</md-table-head>
+              <md-table-head class="colum-container table-head-font">Name</md-table-head>
+              <md-table-head class="colum-container table-head-font">Type</md-table-head>
+              <md-table-head class="colum-container table-head-font">Team</md-table-head>
             </md-table-row>
 
-            <md-table-row v-for="(info, i) in infos" :key="info.id">
+            <md-table-row v-for="(info, i) in infos" :key="info.id"  class="table-row-container">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
-                class="colum-container name-user"
+                class="colum-container name-user table-cellule"
                 ><p @click="showSpecificGraphic(info.id)">
                   {{ info.firstname }} {{ info.lastname }}
                 </p></md-table-cell
@@ -22,7 +38,7 @@
                 <md-table-cell
                   v-if="info.status"
                   v-bind:class="{ active: isInactive.includes(info.id) }"
-                  class="colum-container"
+                  class="colum-container table-cellule"
                   >{{ info.right }}</md-table-cell
                 >
               </div>
@@ -31,7 +47,7 @@
                 <md-table-cell
                   v-if="info.status"
                   v-bind:class="{ active: isInactive.includes(info.id) }"
-                  class="colum-container"
+                  class="colum-container table-cellule"
                 >
                   <md-field>
                     <label for="right">{{ infos[i].right }}</label>
@@ -58,7 +74,7 @@
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
-                class="colum-container"
+                class="colum-container table-cellule"
               >
                 <md-field>
                   <label for="team">{{ info.team }}</label>
@@ -84,7 +100,7 @@
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
-                class="colum-container"
+                class="colum-container table-cellule"
                 ><button
                   @click="
                     updateFalse(info),
@@ -100,22 +116,7 @@
             </md-table-row>
           </md-table>
           <md-snackbar :md-active.sync="actionMessage"> {{ message }}</md-snackbar>
-        </div>
-        <p>Team</p>
-        <div>
-          <ul class="team-list">
-            <li
-              v-for="team in teams"
-              :key="team.id"
-              :value="team.id"
-              @click="showSpecificGraphic(team.id)"
-              class="name-team"
-            >
-              {{ team.name }}
-            </li>
-          </ul>
-        </div>
-      
+        </div>      
     </div>
 </template>
 
@@ -293,40 +294,18 @@ export default {
 </script>
 
 <style>
+
 #team-table {
-  width: 30vw;
+
+  width: 100%;
   height: 70vh;
   overflow: hidden;
   overflow-y: scroll;
-}
-
-.md-layout-item {
-  display: flex;
-  justify-content: flex-end;
-}
-
-#team-table-container {
-  max-width: 30vw;
-  overflow: hidden;
-}
-
-.colum-container {
-  padding: 0;
+  margin-top: 5%;
 }
 
 .md-table-head .md-table-head-container {
   text-align: center;
-}
-
-.md-table-cell:last-child,
-.md-table-cell-container,
-.md-content {
-  padding-right: 0;
-  padding-left: 0;
-}
-
-.team {
-  width: 3vw;
 }
 
 .team-list {
@@ -335,33 +314,55 @@ export default {
   padding: 0;
 }
 
+.title-team {
+  text-transform: capitalize;
+}
+
 .name-user,
 .name-team {
   cursor: pointer;
+  font-weight: bold;
 }
 
-.md-list-item-content {
-  min-height: 0;
+.table-head-font {
+  font-size: 18px;
 }
 
-.md-menu-content {
-  max-width: 165px;
+.name-user:hover,
+.name-team:hover {
+  color:cornflowerblue;
+}
+.name-team:hover {
+  font-style: italic;
 }
 
-.icon-corbeille:hover {
-  cursor: pointer;
+.name-user:hover {
+  font-size: 15px;
 }
 
-.btn-icon-corbeille {
-  border: initial;
-  background: initial;
+@media only screen and (max-width:1433px) {
+  .team-list-container {
+    margin-top: 15vw;
+  }
 }
 
-.md-menu.md-select:not(.md-disabled) .md-icon {
-  display: none;
+@media only screen and (max-width:1280px) {
+  .team-list-container {
+    margin-top: 20vw;
+  }
+}
+@media only screen and (max-width:1200px) {
+  .team-list-container {
+    margin-top: 30vw;
+  }
+}
+@media only screen and (max-width:1000px) {
+  .team-list-container {
+    margin-top: 40vw;
+  }
 }
 
 .active {
   display: none;
-}
+} 
 </style>

@@ -176,6 +176,12 @@ export default {
 #select-date {
   display: flex;
   justify-content: space-between;
+  margin-left: 10%;
+}
+
+.content {
+  margin-top : 10%;
+  max-height: 25vw;
 }
 
 .btn-show {
