@@ -71,8 +71,6 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
-import Axios from "axios";
-import { API_URL } from "./services/constants";
 
 export default {
   name: "User",
@@ -98,9 +96,6 @@ export default {
     },
   },
   methods: {
-    go() {
-      this.$router.push("dashboard");
-    },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -130,51 +125,9 @@ export default {
       this.clearForm();
 
     },
-
-    saveUser() {
-      this.sending = true;
-
-      Axios.post(API_URL + "/login", {
-        email: this.form.email,
-        password: this.form.password,
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            this.$store.commit("token", response.data.jwt);
-            localStorage.setItem("token", JSON.stringify(response.data.jwt));
-            this.token = response.data.jwt;
-            this.getUser();
-          }
-          if (response.status === 401) {
-            this.unauthorized = true;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      window.setTimeout(() => {
-        this.sending = false;
-        this.clearForm();
-      }, 1500);
-    },
-    getUser() {
-      console.log(this.token);
-      Axios.get(API_URL + "/my_user", {
-        headers: {
-          authorization: `Bearer ${this.token}`,
-        },
-      }).then((response) => {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        this.$store.commit("user", response.data);
-        this.$router.push("dashboard");
-      });
-    },
     validateUser() {
       this.$v.$touch();
-
       if (!this.$v.$invalid) {
-        // this.saveUser();
         this.login();
       }
     },

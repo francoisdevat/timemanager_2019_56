@@ -23,3 +23,11 @@ new Vue({
   router,
   store,
 }).$mount("#app");
+
+// store.subscribe((mutation, state) => {
+//   // if (mutation.type === "users_hours_success") {
+//     console.log(state.user_hours)
+//     console.log(mutation.type)
+//     console.log(mutation.payload.data)
+//   // }
+// })

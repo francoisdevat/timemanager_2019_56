@@ -118,20 +118,24 @@
           <md-snackbar :md-active.sync="actionMessage"> {{ message }}</md-snackbar>
         </div>      
     </div>
+    <p>Team</p>
+    <div>
+      <ul class="team-list">
+        <li
+          v-for="team in teams"
+          :key="team.id"
+          :value="team.id"
+          @click="showTeamChart(team.id)"
+          class="name-team"
+        >
+          {{ team.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-import Axios from "axios";
-
-// on push dans un tableau les info.id qui on été cliqué pour le display none afin de les garder en display none apres un clique sur une autre ligne
-
-// var tabTeam = [];
-// for (var i = 1; i <= 10; i++) {
-//   tabTeam.push({
-//     id: i,
-//   });
-// }
-
 export default {
   name: "TeamTable",
   data: () => ({
@@ -151,27 +155,19 @@ export default {
     idGraphicToShow: null,
   }),
 
-    computed: {
+  computed: {
     isUser: function() {
       return this.$store.getters.isUser;
+    },
+    isTeam: function() {
+      return this.$store.getters.isTeam;
     },
   },
 
   methods: {
     updateFalse: function(info) {
-      const id = info.id;
-      Axios.put("http://localhost:4000/api/users/" + id, {
-        user: {
-          email: info.email,
-          firstname: info.firstname,
-          lastname: info.lastname,
-          password: info.password_hash,
-          status: false,
-          team_id: info.team_id,
-          right: info.right,
-          team: info.team,
-        },
-      })
+      this.$store
+        .dispatch("updateuserstatus", { info })
         .then((response) => {
           if (response.status === 200) {
             this.message =
@@ -179,7 +175,7 @@ export default {
               info.firstname +
               " " +
               info.lastname +
-              " has successfully been delete!";
+              " has successfully been deleted!";
             this.actionMessage = true;
           }
         })
@@ -190,26 +186,8 @@ export default {
     },
 
     updateTeam: function(teamId, info) {
-      console.log(teamId)
-      console.log(info)
-
-      Axios.get("http://localhost:4000/api/teams/" + teamId).then(
-        (response) => (this.teamName = response.data.data.name)
-      );
-
-      Axios.put("http://localhost:4000/api/users/" + info.id, {
-        user: {
-          email: info.email,
-          firstname: info.firstname,
-          lastname: info.lastname,
-          password: info.password_hash,
-          status: info.status,
-          team_id: teamId,
-          right_id: info.right_id,
-          right: info.right,
-          team: this.teamName,
-        },
-      })
+      this.$store
+        .dispatch("updateuser", { teamId, info })
         .then((response) => {
           if (response.status === 200) {
             this.message =
@@ -228,31 +206,16 @@ export default {
     },
 
     updateRight: function(rightId, info) {
-      Axios.get("http://localhost:4000/api/rights/" + rightId).then(
-        (response) => (this.rightName = response.data.data.name)
-      );
-
-      Axios.put("http://localhost:4000/api/users/" + info.id, {
-        user: {
-          email: info.email,
-          firstname: info.firstname,
-          lastname: info.lastname,
-          password: info.password_hash,
-          status: info.status,
-          team_id: info.team_id,
-          right_id: rightId,
-          right: this.rightName,
-          team: info.name,
-        },
-      })
+      this.$store
+        .dispatch("updateuserright", { rightId, info })
         .then((response) => {
           if (response.status === 200) {
             this.message =
-              "The team of user " +
+              "The rights of user " +
               info.firstname +
               " " +
               info.lastname +
-              " has successfully been changed!";
+              " have successfully been changed!";
             this.actionMessage = true;
           }
         })
@@ -262,9 +225,13 @@ export default {
         });
     },
 
-    showSpecificGraphic: function(id) {
+    showUserChart: function(id) {
       const user_id = id;
       this.$store.dispatch("getuserhours", { user_id });
+    },
+    showTeamChart: function(id) {
+      const team_id = id;
+      this.$store.dispatch("getteamhours", { team_id });
     },
   },
 

@@ -14,12 +14,12 @@ export default new Vuex.Store({
     rights: [],
     hours: [],
     userhours: [],
-    teamhours: [],
+    team_hours: [],
     specifichours: [],
     clocks: [],
     all_users: [],
     last_clock: {},
-    specific_hours: [],   
+    specific_hours: [],
     specific_id: "",
     user_hours: [],
   },
@@ -52,7 +52,7 @@ export default new Vuex.Store({
     },
     user_hours_success(state, userhours) {
       state.status = "success";
-      state.userhours = userhours;
+      state.user_hours = userhours;
     },
     hours_success(state, hours) {
       state.status = "success";
@@ -60,7 +60,7 @@ export default new Vuex.Store({
     },
     team_hours_success(state, teamhours) {
       state.status = "success";
-      state.teamhours = teamhours;
+      state.team_hours = teamhours;
     },
     specific_hours_success(state, specifichours) {
       state.status = "success";
@@ -93,31 +93,6 @@ export default new Vuex.Store({
             const token = resp.data.jwt;
             localStorage.setItem("token", token);
             commit("auth_success_token", token);
-            axios
-              .get(API_URL + "/my_user", {
-                headers: {
-                  authorization: `Bearer ${token}`,
-                },
-              })
-              .then((response) => {
-                const my_user = response.data;
-                commit("auth_success_user", my_user);
-                // ***
-                axios({
-                  url: API_URL + "/lastclock/" + response.data.id,
-                  method: "GET",
-                })
-                  .then((rep) => {
-                    const lastclockage = rep.data.data;
-                    commit("last_clock_success", lastclockage);
-                    resolve(rep);
-                  })
-                  .catch((err) => {
-                    commit("auth_error");
-                    reject(err);
-                  });
-                  // ****
-              });
             resolve(resp);
           })
           .catch((err) => {
@@ -128,7 +103,30 @@ export default new Vuex.Store({
       });
     },
 
+    getuser({ commit }) {
+      return new Promise((resolve, reject) => {
+        const token = localStorage.getItem("token");
+        axios
+          .get(API_URL + "/my_user", {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            const my_user = response.data;
+            commit("auth_success_user", my_user);
+            resolve(response.data);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            localStorage.removeItem("token");
+            reject(err);
+          });
+      });
+    },
+
     register({ commit }, donnees) {
+      console.log(donnees);
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios
@@ -183,7 +181,85 @@ export default new Vuex.Store({
           })
           .catch((err) => {
             commit("auth_error");
-            localStorage.removeItem("token");
+            reject(err);
+          });
+      });
+    },
+
+    updateuser({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios
+          .put(API_URL + "/users/" + data.info.id, {
+            user: {
+              email: data.info.email,
+              firstname: data.info.firstname,
+              lastname: data.info.lastname,
+              password: data.info.password_hash,
+              status: data.info.status,
+              team_id: data.teamId,
+              right_id: data.info.right_id,
+            },
+          })
+          .then((retour) => {
+            commit("auth_success_user", retour.data.data);
+            resolve(retour);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+
+    updateuserright({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios
+          .put(API_URL + "/users/" + data.info.id, {
+            user: {
+              email: data.info.email,
+              firstname: data.info.firstname,
+              lastname: data.info.lastname,
+              password: data.info.password_hash,
+              status: data.info.status,
+              team_id: data.info.team_id,
+              right_id: data.rightId,
+            },
+          })
+          .then((retour) => {
+            commit("auth_success_user", retour.data.data);
+            resolve(retour);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+
+    updateuserstatus({ commit }, user) {
+      console.log(user.info.id);
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios
+          .put(API_URL + "/users/" + user.info.id, {
+            user: {
+              email: user.info.email,
+              firstname: user.info.firstname,
+              lastname: user.info.lastname,
+              password: user.info.password_hash,
+              status: false,
+              team_id: user.info.team_id,
+              right_id: user.info.rightId,
+            },
+          })
+          .then((retour) => {
+            commit("auth_success_user", retour.data.data);
+            resolve(retour);
+          })
+          .catch((err) => {
+            commit("auth_error");
             reject(err);
           });
       });
@@ -285,7 +361,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url: API_URL + "/teamhours/" + team_id,
+          url: API_URL + "/teamhours/" + team_id.team_id,
           method: "GET",
         })
           .then((resp) => {
@@ -336,7 +412,7 @@ export default new Vuex.Store({
       });
     },
   },
-  
+
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
@@ -346,5 +422,6 @@ export default new Vuex.Store({
     isSpecificHours: (state) => state.specific_hours,
     isSpecificId: (state) => state.specific_id,
     isUserHours: (state) => state.user_hours,
+    isTeamHours: (state) => state.team_hours,
   },
 });

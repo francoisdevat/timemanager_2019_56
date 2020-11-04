@@ -101,7 +101,6 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
-import Axios from "axios";
 
 export default {
   name: "Register",
@@ -134,23 +133,15 @@ export default {
       },
     },
   },
-
   methods: {
-    
-    gosignin() {
-      this.$router.push("login");
-    },
-
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
-
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty,
         };
       }
     },
-
     clearForm() {
       this.$v.$reset();
       this.form.firstname = null;
@@ -158,60 +149,33 @@ export default {
       this.form.password = null;
       this.form.email = null;
     },
-
-    register: function() {
-      let donnees = {
-        email: this.form.email,
-        firstname: this.form.firstname,
-        lastname: this.form.lastname,
-        password: this.form.password,
-        status: true,
-        type: "Employee",
-        team_id: "4ebbed0b-3681-43ee-9db6-719156ed9d94",
-      };
-      this.sending = true;
-      this.$store
-        .dispatch("register", donnees)
-        .then(() => this.$router.push("/dashboard"))
-        .catch((error) => {
-          console.log(error);
-          // snackbar error
-        });
-      this.clearForm();
-    },
-
     saveUser() {
       this.sending = true;
-
-      Axios.post("http://localhost:4000/api/users/", {
-        user: {
+      this.$store
+        .dispatch("register", {
           email: this.form.email,
           firstname: this.form.firstname,
           lastname: this.form.lastname,
           password: this.form.password,
           status: true,
-          type: "Employee",
-          team_id: "4ebbed0b-3681-43ee-9db6-719156ed9d94",
-        },
-      })
-        .then((response) => (this.lastUser = response.data))
+          right_id: "",
+          team_id: "",
+        })
+        .then(() => {
+          this.lastUser = `${this.form.firstname} ${this.form.lastname}`;
+          this.userSaved = true;
+        })
         .catch((error) => {
           console.log(error);
+          // snackbar error
         });
-      window.setTimeout(() => {
-        this.lastUser = `${this.form.firstname} ${this.form.lastname}`;
-        this.userSaved = true;
-        this.sending = false;
-        this.clearForm();
-      }, 1500);
+      this.sending = false;
+      this.clearForm();
     },
-
     validateUser() {
       this.$v.$touch();
-
       if (!this.$v.$invalid) {
-        // this.saveUser();
-        this.register();
+        this.saveUser();
       }
     },
   },
