@@ -23,7 +23,9 @@
             <md-table-head class="colum-container table-head-font"
               >Name</md-table-head
             >
-            <md-table-head v-if="isUser.right !== 'employee'" class="colum-container table-head-font"
+            <md-table-head
+              v-if="isUser.right !== 'employee'"
+              class="colum-container table-head-font"
               >Type</md-table-head
             >
             <md-table-head class="colum-container table-head-font"
@@ -54,7 +56,7 @@
               >
             </div>
 
-            <div v-if="isUser.right === 'general manager'">
+            <div v-if="isUser.right === 'generalmanager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
@@ -237,21 +239,30 @@ export default {
       .then((response) => {
         this.infos = response.data.data;
       })
-      .catch((error) => console.log(error));
+      .catch(() => {
+        this.message = "An error has occured, please try again";
+        this.actionMessage = true;
+      });
 
     this.$store
       .dispatch("getallteams")
       .then((response) => {
         this.teams = response.data.data;
       })
-      .catch((error) => console.log(error));
+      .catch(() => {
+        this.message = "An error has occured, please try again";
+        this.actionMessage = true;
+      });
 
     this.$store
       .dispatch("getallrights")
       .then((response) => {
         this.rights = response.data.data;
       })
-      .catch((error) => console.log(error));
+      .catch(() => {
+        this.message = "An error has occured, please try again";
+        this.actionMessage = true;
+      });
   },
 };
 </script>
