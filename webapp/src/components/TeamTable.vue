@@ -31,7 +31,6 @@
             >
           </md-table-row>
 
-<!-- Seul le GM peut voir tous les users. Les managers ne peuvent voir que les employees -->
           <md-table-row
             v-for="(info, i) in infos"
             :key="info.id"

@@ -88,7 +88,7 @@ export default {
     logout: function() {
       this.$store.dispatch("logout").then(() => {
         this.user = null;
-        this.$router.push("/login");
+        window.location.href = "/login";
       });
     },
   },
@@ -113,12 +113,12 @@ export default {
 }
 
 .md-title {
-  font-weight: bold!important;
+  font-weight: bold !important;
 }
 
 .md-list {
-    margin: 25%!important;
-    padding: 0;
+  margin: 25% !important;
+  padding: 0;
 }
 
 .item-list-menu {

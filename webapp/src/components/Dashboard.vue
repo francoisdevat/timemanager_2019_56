@@ -74,8 +74,6 @@ export default {
             }
           })
           .catch(() => {
-            // this.error = true;
-            // console.log(err);
             this.clockTitle = "Clock in";
             this.clockstatus = false;
           });

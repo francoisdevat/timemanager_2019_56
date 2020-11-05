@@ -223,11 +223,10 @@ export default {
               }, 2000);
             }
           })
-          .catch((err) => {
+          .catch(() => {
             this.message = "An error occured. Please try again.";
             this.userSaved = true;
             this.sending = false;
-            console.log(err);
           });
       } else {
         this.message = "You must type in your password.";
@@ -260,11 +259,10 @@ export default {
             this.sending = false;
           }
         })
-        .catch((err) => {
+        .catch(() => {
           this.message = "An error occured. Please try again.";
           this.userSaved = true;
           this.sending = false;
-          console.log(err);
         });
     },
     validateUser() {

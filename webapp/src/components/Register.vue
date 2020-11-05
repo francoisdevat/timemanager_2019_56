@@ -94,6 +94,9 @@
       <md-snackbar :md-active.sync="userSaved"
         >The user {{ lastUser }} was saved with success!</md-snackbar
       >
+      <md-snackbar :md-active.sync="error"
+        >An error occured, please try again later</md-snackbar
+      >
     </form>
   </div>
 </template>
@@ -115,6 +118,7 @@ export default {
     userSaved: false,
     sending: false,
     lastUser: null,
+    error: false,
   }),
   validations: {
     form: {
@@ -165,10 +169,7 @@ export default {
           this.lastUser = `${this.form.firstname} ${this.form.lastname}`;
           this.userSaved = true;
         })
-        .catch((error) => {
-          console.log(error);
-          // snackbar error
-        });
+        .catch(() => (this.error = true));
       this.sending = false;
       this.clearForm();
     },
