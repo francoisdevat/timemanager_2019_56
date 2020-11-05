@@ -18,7 +18,9 @@
     </div>
     <div class="md-layout">
       <div class="md-layout-item">
+        <h3>CHART</h3>
         <Chart />
+        <ChartUser />
       </div>
       <div class="md-layout-item"><TeamTable /></div>
     </div>
@@ -27,6 +29,7 @@
 
 <script>
 import Chart from "./Chart";
+import ChartUser from "./ChartUser";
 import TeamTable from "./TeamTable";
 
 const moment = require("moment");
@@ -34,6 +37,7 @@ const moment = require("moment");
 export default {
   components: {
     Chart,
+    ChartUser,
     TeamTable,
   },
 
@@ -104,31 +108,17 @@ export default {
 </script>
 
 <style scoped>
-.container-large {
-  position: relative;
-}
+
 .btn-color {
   color: white !important;
   background-color: Green !important;
   width: 95px;
   height: 80px;
 }
-.large {
-    position: absolute;
-    left: 80%;
-    top: -10%;
-    transform: translateX(-50%);
-    z-index: 1000;
-}
+
 .red {
   background-color: red !important;
   color: white !important;
-}
-
-@media only screen and (max-width:1433px) {
-  .large {
-    top: 0%;
-  }
 }
 
 </style>

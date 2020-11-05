@@ -1,9 +1,9 @@
 <script>
-// import { Bar } from "vue-chartjs";
-import { Line } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
+// import { Line } from "vue-chartjs";
 export default {
-  // extends: Bar,
-  extends: Line,
+  // extends: Line,
+  extends: Bar,
   props: {
     chartData: {
       type: Array,
@@ -42,6 +42,7 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
       },
+      height: 300
     };
   },
   mounted() {
@@ -68,7 +69,7 @@ export default {
 
 
 <style>
-#line-chart {
+#bar-chart {
   height: 250px!important;
 }
 </style>
