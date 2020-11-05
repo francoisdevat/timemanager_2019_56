@@ -1,7 +1,9 @@
 <script>
-import { Line } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
+// import { Line } from "vue-chartjs";
 export default {
-  extends: Line,
+  // extends: Line,
+  extends: Bar,
   props: {
     chartData: {
       type: Array,
@@ -66,7 +68,7 @@ export default {
 
 
 <style>
-#line-chart {
+#bar-chart {
   height: 250px!important;
 }
 </style>

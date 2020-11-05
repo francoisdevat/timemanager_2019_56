@@ -54,7 +54,7 @@
               >
             </div>
 
-            <div v-if="isUser.right === 'generalmanager'">
+            <div v-if="isUser.right === 'general manager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
@@ -130,20 +130,6 @@
           {{ message }}</md-snackbar
         >
       </div>
-    </div>
-    <p>Team</p>
-    <div>
-      <ul class="team-list">
-        <li
-          v-for="team in teams"
-          :key="team.id"
-          :value="team.id"
-          @click="showTeamChart(team.id)"
-          class="name-team"
-        >
-          {{ team.name }}
-        </li>
-      </ul>
     </div>
   </div>
 </template>
@@ -303,8 +289,15 @@ export default {
   font-size: 18px;
 }
 
-.name-user:hover,
+.name-team {
+  color: cornflowerblue;
+}
+
 .name-team:hover {
+  color: black;
+}
+
+.name-user:hover {
   color: cornflowerblue;
 }
 .name-team:hover {
@@ -313,28 +306,6 @@ export default {
 
 .name-user:hover {
   font-size: 15px;
-}
-
-@media only screen and (max-width: 1433px) {
-  .team-list-container {
-    margin-top: 15vw;
-  }
-}
-
-@media only screen and (max-width: 1280px) {
-  .team-list-container {
-    margin-top: 20vw;
-  }
-}
-@media only screen and (max-width: 1200px) {
-  .team-list-container {
-    margin-top: 30vw;
-  }
-}
-@media only screen and (max-width: 1000px) {
-  .team-list-container {
-    margin-top: 40vw;
-  }
 }
 
 .active {

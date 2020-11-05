@@ -19,9 +19,11 @@
     </div>
     <div class="md-layout">
       <div class="md-layout-item">
-        <Chart />
+        <h3>CHART</h3>
+        <div v-if="isUser.right === 'employee'"><ChartUser /></div> 
+        <div v-if="isUser.right !== 'employee'"><Chart /><ChartUser /></div>
       </div>
-      <div class="md-layout-item"><TeamTable /></div>
+      <div v-if="isUser.right !== 'employee'" class="md-layout-item"><TeamTable /></div>
     </div>
     <md-snackbar :md-active.sync="error"
       >An error occured, please try again later</md-snackbar
@@ -31,12 +33,14 @@
 
 <script>
 import Chart from "./Chart";
+import ChartUser from "./ChartUser";
 import TeamTable from "./TeamTable";
 const moment = require("moment");
 
 export default {
   components: {
     Chart,
+    ChartUser,
     TeamTable,
   },
 
@@ -127,30 +131,16 @@ export default {
 </script>
 
 <style scoped>
-.container-large {
-  position: relative;
-}
+
 .btn-color {
   color: white !important;
   background-color: Green !important;
   width: 95px;
   height: 80px;
 }
-.large {
-  position: absolute;
-  left: 80%;
-  top: -10%;
-  transform: translateX(-50%);
-  z-index: 1000;
-}
+
 .red {
   background-color: red !important;
   color: white !important;
-}
-
-@media only screen and (max-width: 1433px) {
-  .large {
-    top: 0%;
-  }
 }
 </style>
