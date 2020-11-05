@@ -165,8 +165,25 @@ export default {
       this.form.password = null;
       this.form.email = null;
     },
-    saveUser() {
+    updateUser() {
       this.sending = true;
+
+      // this.$store
+      //   .dispatch("updateuser", { teamId, info })
+      //   .then((response) => {
+      //     if (response.status === 200) {
+      //       this.message =
+      //         "The user " +
+      //         info.firstname +
+      //         " " +
+      //         info.lastname +
+      //         " has successfully been updated!";
+      //       this.actionMessage = true;
+      //     }
+      //   })
+      //   .catch(() => {
+      //     // snackbar erreur
+      //   });
 
       Axios.put("http://localhost:4000/api/users/", {
         user: {
@@ -188,7 +205,7 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        this.saveUser();
+        this.updateUser();
       }
     },
   },

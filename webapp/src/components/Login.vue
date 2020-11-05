@@ -116,7 +116,14 @@ export default {
       let password = this.form.password;
       this.$store
         .dispatch("login", { email, password })
-        .then(() => this.$router.push("/dashboard"))
+        // .then(() => this.$router.push("/dashboard"))
+        .then((response) => {
+          if(response.status === 200) {
+             this.$router.push("/dashboard")
+          } else {
+            this.unauthorized = true;
+          }
+        })
         .catch((error) => {
           console.log(error)
           this.unauthorized = true;

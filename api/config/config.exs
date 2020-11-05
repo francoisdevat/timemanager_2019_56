@@ -30,7 +30,7 @@ config :phoenix, :json_library, Jason
 
 config :api, Gotham.Guardian,
  issuer: "Gotham",
- secret_key: "uH9hqeesF3wSTWfMuQDeok6+AYJib3eZC/o+bXEv5WMwd9hDEIO0GqsXHPfoVC5I",
+ secret_key: "boxA1G/Egx4Wa0YLmD+FaFXNvvxxQTF0XRDVY33VIfgPmE9XXPK/JshiKDH7C12M",
  serializer: Gotham.GuardianSerializer
 
 # Import environment specific config. This must remain at the bottom
