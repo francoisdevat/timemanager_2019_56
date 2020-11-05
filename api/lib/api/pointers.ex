@@ -50,6 +50,16 @@ defmodule Gotham.Pointers do
     |> Repo.preload(:user)
   end
 
+  def get_lastfalseclock!(user_id) do
+    from(c in Clock,
+    where: c.user_id == ^user_id,
+    where: c.status == false,
+    order_by: [desc: c.time],
+    limit: 1)
+    |> Repo.one
+    |> Repo.preload(:user)
+  end
+
   @doc """
   Creates a clock.
 

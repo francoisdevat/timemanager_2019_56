@@ -19,6 +19,7 @@ export default new Vuex.Store({
     clocks: [],
     all_users: [],
     last_clock: {},
+    last_hour: {},
     specific_hours: [],
     specific_id: "",
     user_hours: [],
@@ -77,6 +78,10 @@ export default new Vuex.Store({
     last_clock_success(state, clockage) {
       state.status = "success";
       state.last_clock = clockage;
+    },
+    last_hour_success(state, lasthour) {
+      state.status = "success";
+      state.last_hour = lasthour;
     },
     specific_id_success(state, user_id) {
       state.status = "success";
@@ -186,6 +191,31 @@ export default new Vuex.Store({
       });
     },
 
+    modifyuser({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios
+          .put(API_URL + "/users/" + user.id, {
+            user: {
+              email: user.email,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              password: user.password,
+              status: user.status,
+              team_id: user.team_id,
+              right_id: user.right_id,
+            },
+          })
+          .then((retour) => {
+            commit("auth_success_user", retour.data.data);
+            resolve(retour);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
     updateuser({ commit }, data) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
@@ -385,7 +415,7 @@ export default new Vuex.Store({
           .then((resp) => {
             const clockage = resp.data;
             commit("clocks_success", clockage);
-            resolve(resp);
+            resolve(clockage);
           })
           .catch((err) => {
             commit("auth_error");
@@ -403,6 +433,30 @@ export default new Vuex.Store({
           .then((resp) => {
             const lastclockage = resp.data;
             commit("last_clock_success", lastclockage);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error");
+            reject(err);
+          });
+      });
+    },
+    posthour({ commit }, hour) {
+      console.log(hour)
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios
+          .post(API_URL + "/hours", {
+            hour: {
+              start: hour.start,
+              end: hour.time,
+              user_id: hour.user_id,
+              team_id: hour.team_id,
+            },
+          })
+          .then((resp) => {
+            const lasthour = resp.data;
+            commit("last_hour_success", lasthour);
             resolve(resp);
           })
           .catch((err) => {

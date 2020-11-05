@@ -35,6 +35,11 @@ defmodule GothamWeb.ClockController do
     render(conn, "show.json", clock: clock)
   end
 
+  def lastfalseclock(conn, %{"user_id" => user_id}) do
+    clock = Pointers.get_lastfalseclock!(user_id)
+    render(conn, "show.json", clock: clock)
+  end
+
   def update(conn, %{"id" => id, "clock" => clock_params}) do
     clock = Pointers.get_clock!(id)
 
