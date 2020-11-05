@@ -111,8 +111,6 @@ defmodule Gotham.Accounts do
     User.changeset(user, attrs)
   end
 
-  ## ****************** ##
-
   def token_sign_in(email, password) do
     case email_password_auth(email, password) do
       {:ok, user} ->

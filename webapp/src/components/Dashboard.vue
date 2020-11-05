@@ -7,23 +7,25 @@
         >{{ clockTitle }}</md-button
       >
       <div v-if="clocktime">
-        <md-content v-if="clockstatus" class="md-elevation-10"
+        <md-button v-if="clockstatus" class="button"
           >You clocked in on
-          {{ clocktime | moment("MM/DD/YYYY hh:mm") }}</md-content
+          {{ clocktime | moment("MM/DD/YYYY hh:mm") }}</md-button
         >
-        <md-content v-if="!clockstatus" class="md-elevation-10"
+        <md-button v-if="!clockstatus" class="button"
           >You clocked out on
-          {{ clocktime | moment("MM/DD/YYYY hh:mm") }}</md-content
+          {{ clocktime | moment("MM/DD/YYYY hh:mm") }}</md-button
         >
       </div>
     </div>
     <div class="md-layout">
       <div class="md-layout-item">
         <h3>CHART</h3>
-        <div v-if="isUser.right === 'employee'"><ChartUser /></div> 
+        <div v-if="isUser.right === 'employee'"><ChartUser /></div>
         <div v-if="isUser.right !== 'employee'"><Chart /><ChartUser /></div>
       </div>
-      <div v-if="isUser.right !== 'employee'" class="md-layout-item"><TeamTable /></div>
+      <div v-if="isUser.right !== 'employee'" class="md-layout-item">
+        <TeamTable />
+      </div>
     </div>
     <md-snackbar :md-active.sync="error"
       >An error occured, please try again later</md-snackbar
@@ -98,7 +100,6 @@ export default {
       this.$store
         .dispatch("lastclock", user_id)
         .then((response) => {
-          console.log(1);
           if (response.data.data.user_id) {
             start = response.data.data.time;
             status = !response.data.data.status;
@@ -106,7 +107,6 @@ export default {
             this.$store
               .dispatch("clockin", { user_id, time, status })
               .then((resp) => {
-                console.log(2);
                 this.status = resp.data.status;
                 this.clocktime = resp.data.time;
                 this.clockstatus = !this.clockstatus;
@@ -115,7 +115,6 @@ export default {
                 }
 
                 if (!status) {
-                  console.log(3);
                   this.$store
                     .dispatch("posthour", { start, time, user_id, team_id })
                     .catch(() => (this.error = true));
@@ -131,7 +130,6 @@ export default {
 </script>
 
 <style scoped>
-
 .btn-color {
   color: white !important;
   background-color: Green !important;
@@ -142,5 +140,12 @@ export default {
 .red {
   background-color: red !important;
   color: white !important;
+}
+.large {
+  display: flex;
+  justify-content: center;
+}
+.button {
+  cursor: none;
 }
 </style>

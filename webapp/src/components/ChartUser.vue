@@ -158,8 +158,7 @@ export default {
             );
             this.loaded = true;
           })
-          .catch((error) => {
-            console.log(error);
+          .catch(() => {
             this.message = "An error occured, please try again later";
             this.actionMessageHours = true;
           })
@@ -191,8 +190,7 @@ export default {
             );
             this.loaded = true;
           })
-          .catch((error) => {
-            console.log(error);
+          .catch(() => {
             this.message = "An error occured, please try again later";
             this.actionMessageHours = true;
           })

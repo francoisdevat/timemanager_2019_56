@@ -37,8 +37,6 @@ defmodule Gotham.Pointers do
   """
   def get_clock!(id), do: Repo.get!(Clock, id)
 
-  # def get_clockbyuserid!(user_id), do: Repo.get_by!(Clock, user_id: user_id)
-
   def get_clockbyuser!(user_id), do: Repo.get_by!(Clock, user_id: user_id)
 
   def get_lastclock!(user_id) do

@@ -440,7 +440,6 @@ export default new Vuex.Store({
       });
     },
     posthour({ commit }, hour) {
-      console.log(hour)
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios
