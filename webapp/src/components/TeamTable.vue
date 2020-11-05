@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isUser.right != 'employee'" class="team-table-component">
+    <div v-if="isUser.right !== 'employee'" class="team-table-component">
       <div class="team-list-container">
         <h3 class="title-team">TEAM LIST :</h3>
         <div>
@@ -23,7 +23,7 @@
             <md-table-head class="colum-container table-head-font"
               >Name</md-table-head
             >
-            <md-table-head class="colum-container table-head-font"
+            <md-table-head v-if="isUser.right !== 'employee'" class="colum-container table-head-font"
               >Type</md-table-head
             >
             <md-table-head class="colum-container table-head-font"
@@ -31,6 +31,7 @@
             >
           </md-table-row>
 
+<!-- Seul le GM peut voir tous les users. Les managers ne peuvent voir que les employees -->
           <md-table-row
             v-for="(info, i) in infos"
             :key="info.id"
@@ -45,7 +46,7 @@
               </p></md-table-cell
             >
 
-            <div v-if="isUser.right != 'generalmanager'">
+            <div v-if="isUser.right === 'manager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
@@ -54,7 +55,7 @@
               >
             </div>
 
-            <div v-if="isUser.right != 'manager'">
+            <div v-if="isUser.right === 'generalmanager'">
               <md-table-cell
                 v-if="info.status"
                 v-bind:class="{ active: isInactive.includes(info.id) }"
