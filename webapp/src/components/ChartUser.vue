@@ -166,27 +166,29 @@ export default {
     },
     requestData() {
       this.resetState();
-      const user_id = this.isUser.id;
-      this.$store
-        .dispatch("getuserhours", {user_id})
-        .then((response) => {
-          this.hours = response.data.data.map(
-            (time) =>
-              moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-          );
-          var i = 0;
-            var moyenne = 0
-            while(i != this.hours.length){
-              moyenne = moyenne + this.hours[i]
-              i++
-            }
-          this.avg = Math.round((moyenne / i) * 100) / 100
-          this.labels = response.data.data.map((hour) =>
-            moment(hour.end).format("MM-DD")
-          );
-          this.loaded = true;
-        })
-        .catch((error) => console.log(error));
+      if (this.isUser.id) {
+        const user_id = this.isUser.id;
+        this.$store
+          .dispatch("getuserhours", {user_id})
+          .then((response) => {
+            this.hours = response.data.data.map(
+              (time) =>
+                moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
+            );
+            var i = 0;
+              var moyenne = 0
+              while(i != this.hours.length){
+                moyenne = moyenne + this.hours[i]
+                i++
+              }
+            this.avg = Math.round((moyenne / i) * 100) / 100
+            this.labels = response.data.data.map((hour) =>
+              moment(hour.end).format("MM-DD")
+            );
+            this.loaded = true;
+          })
+          .catch((error) => console.log(error));
+      }
     },
   },
 };

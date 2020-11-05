@@ -62,7 +62,6 @@ export default {
           if (response.data.length > 0) {
             this.time = response.data.data.time;
             this.clockstatus = response.data.data.status;
-            console.log(response.data);
             if (response.data.data.status) {
               this.clockTitle = "Clock out";
             } else {
