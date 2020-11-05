@@ -340,6 +340,7 @@ export default new Vuex.Store({
       });
     },
     getuserhours({ commit }, user_id) {
+      console.log(user_id)
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <div class="container">
       <div id="select-date">
         <div>
@@ -21,16 +21,15 @@
 
       <div class="Chart__container" v-if="loaded">
         <div class="Chart__title">
-          Average work time for your selection : {{avg}} hours
+          Your average work time : {{avg}} hours
           <hr />
         </div>
         <div class="Chart__content">
-          <line-chart
-            :key="chartKey"
+          <bar-chart
             v-if="loaded"
             :chart-data="hours"
             :chart-labels="labels"
-          ></line-chart>
+          ></bar-chart>
         </div>
       </div>
     </div>
@@ -41,12 +40,12 @@
 </template>
 
 <script>
-import LineChart from "./LineChart";
+import BarChart from "./BarChart";
 const moment = require("moment");
 
 export default {
   components: {
-    LineChart,
+    BarChart,
   },
 
   props: {},
@@ -61,11 +60,8 @@ export default {
       message: "",
       actionMessageHours: false,
       chartKey: 0,
-      avg : null
+      avg : null,
     };
-  },
-  mounted() {
-    this.requestData();
   },
   computed: {
     isUserHours: function() {
@@ -74,11 +70,21 @@ export default {
     isTeamHours: function() {
       return this.$store.getters.isTeamHours;
     },
+    isUser: function() {
+      return this.$store.getters.isUser;
+    },
+  },
+  mounted() {
+    this.requestData();
   },
   watch: {
-    isUserHours: function() {
-      this.userChart();
+    // isUserHours: function() {
+    //   this.userChart();
+    // },
+    isUser: function() {
+      this.requestData();
     },
+
     isTeamHours: function() {
       this.teamChart();
     },
@@ -160,22 +166,21 @@ export default {
     },
     requestData() {
       this.resetState();
+      const user_id = this.isUser.id;
       this.$store
-        .dispatch("getallhours")
+        .dispatch("getuserhours", {user_id})
         .then((response) => {
           this.hours = response.data.data.map(
             (time) =>
               moment(time.end).diff(moment(time.start)) / (1000 * 60 * 60)
-
           );
           var i = 0;
-          var moyenne = 0
-          while(i != this.hours.length){
-            moyenne = moyenne + this.hours[i]
-            i++
-          }
+            var moyenne = 0
+            while(i != this.hours.length){
+              moyenne = moyenne + this.hours[i]
+              i++
+            }
           this.avg = Math.round((moyenne / i) * 100) / 100
-
           this.labels = response.data.data.map((hour) =>
             moment(hour.end).format("MM-DD")
           );
@@ -194,6 +199,9 @@ export default {
   margin-left: 10%;
 }
 
+.content {
+  margin-top : 1%;
+}
 
 .btn-show {
   margin-top: 3%;
