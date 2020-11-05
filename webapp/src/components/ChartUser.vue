@@ -158,7 +158,11 @@ export default {
             );
             this.loaded = true;
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error);
+            this.message = "An error occured, please try again later";
+            this.actionMessageHours = true;
+          })
       } else {
         this.message = "Please, select a correct date.";
         this.actionMessageHours = true;
@@ -187,7 +191,12 @@ export default {
             );
             this.loaded = true;
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error);
+            this.message = "An error occured, please try again later";
+            this.actionMessageHours = true;
+          })
+          
       }
     },
   },

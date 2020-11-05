@@ -159,7 +159,6 @@ export default {
     },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
-
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty,
@@ -210,7 +209,6 @@ export default {
     },
     validateUser() {
       this.$v.$touch();
-
       if (!this.$v.$invalid) {
         this.updateUser();
       }

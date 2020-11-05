@@ -19,10 +19,10 @@
     <div class="md-layout">
       <div class="md-layout-item">
         <h3>CHART</h3>
-        <Chart />
-        <ChartUser />
+        <div v-if="isUser.right === 'employee'"><ChartUser /></div> 
+        <div v-if="isUser.right !== 'employee'"><Chart /><ChartUser /></div>
       </div>
-      <div class="md-layout-item"><TeamTable /></div>
+      <div v-if="isUser.right !== 'employee'" class="md-layout-item"><TeamTable /></div>
     </div>
   </div>
 </template>
