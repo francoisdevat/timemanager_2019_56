@@ -1,6 +1,10 @@
 <template>
   <div>
-    <form novalidate class="md-layout form-login" @submit.prevent="validateUser">
+    <form
+      novalidate
+      class="md-layout form-login"
+      @submit.prevent="validateUser"
+    >
       <md-card class="md-layout-item md-size-50 md-small-size-100 formulaire">
         <md-card-header>
           <div class="md-title">Gotham City Hall - Login</div>
@@ -116,21 +120,16 @@ export default {
       let password = this.form.password;
       this.$store
         .dispatch("login", { email, password })
-        // .then(() => this.$router.push("/dashboard"))
         .then((response) => {
-          if(response.status === 200) {
-             this.$router.push("/dashboard")
+          if (response.status === 200) {
+            window.location.href = "/dashboard";
           } else {
             this.unauthorized = true;
           }
         })
-        .catch((error) => {
-          console.log(error)
-          this.unauthorized = true;
-        });
+        .catch(() => (this.unauthorized = true));
       this.sending = false;
       this.clearForm();
-
     },
     validateUser() {
       this.$v.$touch();

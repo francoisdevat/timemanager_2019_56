@@ -82,7 +82,10 @@
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <md-button v-if="editing" @click="edit()" class="md-raised md-primary"
+          <md-button
+            v-if="editing"
+            @click="editing = false"
+            class="md-raised md-primary"
             >Edit</md-button
           >
           <md-button @click="showDialog = true" class="md-raised red"
@@ -91,18 +94,27 @@
           <md-button v-if="!editing" @click="cancel()" class="md-raised red"
             >Cancel</md-button
           >
-          <md-button v-if="!editing" class="md-raised md-primary"
+          <md-button v-if="!editing" type="submit" class="md-raised md-primary"
             >Update</md-button
           >
         </md-card-actions>
-      </md-card> 
+      </md-card>
     </form>
     <md-snackbar :md-active.sync="userSaved"> {{ message }} </md-snackbar>
     <md-dialog :md-active.sync="showDialog">
       <md-dialog-title>Remove account</md-dialog-title>
-          <p>Are you sure you want to remove your account ?</p>
+      <p>Are you sure you want to remove your account ?</p>
+      <label for="password">Password</label>
+      <md-input
+        type="password"
+        name="resetpassword"
+        id="resetpassword"
+        v-model="resetpassword"
+      />
       <md-dialog-actions>
-        <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
+        <md-button class="md-primary" @click="showDialog = false"
+          >Cancel</md-button
+        >
         <md-button class="red" @click="remove()">Remove</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -128,7 +140,8 @@ export default {
     sending: false,
     user: null,
     message: null,
-    showDialog: false
+    showDialog: false,
+    resetpassword: null,
   }),
   validations: {
     form: {
@@ -147,15 +160,18 @@ export default {
       },
     },
   },
+  computed: {
+    isUser: function() {
+      return this.$store.getters.isUser;
+    },
+  },
   methods: {
     edit() {
       this.editing = false;
     },
     cancel() {
+      this.clearForm();
       this.editing = true;
-    },
-    gosignin() {
-      this.$router.push("login");
     },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
@@ -172,13 +188,55 @@ export default {
       this.form.password = null;
       this.form.email = null;
     },
+    logout: function() {
+      this.$store.dispatch("logout").then(() => {
+        this.user = null;
+        this.$router.push("/login");
+      });
+    },
     remove() {
-      this.showDialog = false
-      // handle user remove
+      if (this.resetpassword) {
+        this.showDialog = false;
+        this.$store
+          .dispatch("modifyuser", {
+            id: this.isUser.id,
+            email: this.isUser.email,
+            firstname: this.isUser.firstname,
+            lastname: this.isUser.lastname,
+            password: this.resetpassword,
+            status: false,
+            right_id: this.isUser.right_id,
+            team_id: this.isUser.team_id,
+          })
+          .then((response) => {
+            if (response.status === 200) {
+              this.message =
+                "The user " +
+                this.user.firstname +
+                " " +
+                this.user.lastname +
+                " has successfully been removed!";
+              this.userSaved = true;
+              this.sending = false;
+              setTimeout(() => {
+                this.logout();
+              }, 2000);
+            }
+          })
+          .catch(() => {
+            this.message = "An error occured. Please try again.";
+            this.userSaved = true;
+            this.sending = false;
+          });
+      } else {
+        this.message = "You must type in your password.";
+        this.userSaved = true;
+      }
     },
     updateUser() {
       this.sending = true;
       this.clearForm();
+
       this.$store
         .dispatch("modifyuser", {
           email: this.form.email,
@@ -186,8 +244,8 @@ export default {
           lastname: this.form.lastname,
           password: this.form.password,
           status: true,
-          right_id: "",
-          team_id: "",
+          right_id: this.isUser.right_id,
+          team_id: this.isUser.team_id,
         })
         .then((response) => {
           if (response.status === 200) {

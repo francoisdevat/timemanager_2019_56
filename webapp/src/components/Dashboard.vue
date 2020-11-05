@@ -6,13 +6,14 @@
         @click.native="pickdate"
         >{{ clockTitle }}</md-button
       >
-      <div v-if="time">
+      <div v-if="clocktime">
         <md-content v-if="clockstatus" class="md-elevation-10"
-          >You clocked in on {{ time | moment("MM/DD/YYYY hh:mm") }}</md-content
+          >You clocked in on
+          {{ clocktime | moment("MM/DD/YYYY hh:mm") }}</md-content
         >
         <md-content v-if="!clockstatus" class="md-elevation-10"
           >You clocked out on
-          {{ time | moment("MM/DD/YYYY hh:mm") }}</md-content
+          {{ clocktime | moment("MM/DD/YYYY hh:mm") }}</md-content
         >
       </div>
     </div>
@@ -24,6 +25,9 @@
       </div>
       <div v-if="isUser.right !== 'employee'" class="md-layout-item"><TeamTable /></div>
     </div>
+    <md-snackbar :md-active.sync="error"
+      >An error occured, please try again later</md-snackbar
+    >
   </div>
 </template>
 
@@ -31,7 +35,6 @@
 import Chart from "./Chart";
 import ChartUser from "./ChartUser";
 import TeamTable from "./TeamTable";
-
 const moment = require("moment");
 
 export default {
@@ -45,8 +48,10 @@ export default {
   data: () => ({
     clocked: null,
     clockTitle: null,
-    time: null,
-    clockstatus: null,
+    clocktime: null,
+    clockstatus: false,
+    error: false,
+    user: null,
   }),
   computed: {
     isUser: function() {
@@ -54,27 +59,29 @@ export default {
     },
   },
   mounted() {
-    const user_id = this.isUser.id;
-    if (user_id) {
-      this.$store
-        .dispatch("lastclock", user_id)
-        .then((response) => {
-          if (response.data.length > 0) {
-            this.time = response.data.data.time;
-            this.clockstatus = response.data.data.status;
-            if (response.data.data.status) {
-              this.clockTitle = "Clock out";
+    if (localStorage.getItem("token")) {
+      this.$store.dispatch("getuser").then((response) => {
+        this.user = response;
+        this.$store
+          .dispatch("lastclock", this.user.id)
+          .then((resp) => {
+            if (resp.data.data.user_id) {
+              this.clocktime = resp.data.data.time;
+              this.clockstatus = resp.data.data.status;
+              if (resp.data.data.status) {
+                this.clockTitle = "Clock out";
+              } else {
+                this.clockTitle = "Clock in";
+              }
             } else {
               this.clockTitle = "Clock in";
             }
-          } else {
+          })
+          .catch(() => {
             this.clockTitle = "Clock in";
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          // gestion de l'erreur
-        });
+            this.clockstatus = false;
+          });
+      });
     }
   },
   methods: {
@@ -82,25 +89,42 @@ export default {
       return moment();
     },
     pickdate: function() {
-      const user_id = this.isUser.id;
-      console.log(this.clockstatus);
-      const status = !this.clockstatus;
+      const user_id = this.user.id;
+      let status;
+      let start;
       const time = moment().format("YYYY-MM-DD" + "T" + "HH:mm:ss");
-      if (status) {
-        this.clockTitle = "Clock out";
-      } else {
-        this.clockTitle = "Clock in";
-      }
+      const team_id = this.user.team_id;
+
       this.$store
-        .dispatch("clockin", { user_id, time, status })
+        .dispatch("lastclock", user_id)
         .then((response) => {
-          this.status = response.data.status;
-          this.time = response.data.time;
+          console.log(1);
+          if (response.data.data.user_id) {
+            start = response.data.data.time;
+            status = !response.data.data.status;
+
+            this.$store
+              .dispatch("clockin", { user_id, time, status })
+              .then((resp) => {
+                console.log(2);
+                this.status = resp.data.status;
+                this.clocktime = resp.data.time;
+                this.clockstatus = !this.clockstatus;
+                if (status) {
+                  this.clockTitle = "Clock out";
+                }
+
+                if (!status) {
+                  console.log(3);
+                  this.$store
+                    .dispatch("posthour", { start, time, user_id, team_id })
+                    .catch(() => (this.error = true));
+                }
+              })
+              .catch(() => (this.error = true));
+          }
         })
-        .catch((error) => {
-          console.log(error);
-          //gestion erreur
-        });
+        .catch(() => (this.error = true));
     },
   },
 };
@@ -119,5 +143,4 @@ export default {
   background-color: red !important;
   color: white !important;
 }
-
 </style>
