@@ -173,9 +173,6 @@ export default {
     isUser: function() {
       return this.$store.getters.isUser;
     },
-    isTeam: function() {
-      return this.$store.getters.isTeam;
-    },
   },
 
   methods: {

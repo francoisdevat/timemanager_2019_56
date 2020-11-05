@@ -85,6 +85,9 @@
           <md-button v-if="editing" @click="edit()" class="md-raised md-primary"
             >Edit</md-button
           >
+          <md-button @click="showDialog = true" class="md-raised red"
+            ><md-icon>delete</md-icon></md-button
+          >
           <md-button v-if="!editing" @click="cancel()" class="md-raised red"
             >Cancel</md-button
           >
@@ -92,19 +95,23 @@
             >Update</md-button
           >
         </md-card-actions>
-      </md-card>
-
-      <md-snackbar :md-active.sync="userSaved"
-        >The user {{ lastUser }} has successfully been updated!</md-snackbar
-      >
+      </md-card> 
     </form>
+    <md-snackbar :md-active.sync="userSaved"> {{ message }} </md-snackbar>
+    <md-dialog :md-active.sync="showDialog">
+      <md-dialog-title>Remove account</md-dialog-title>
+          <p>Are you sure you want to remove your account ?</p>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
+        <md-button class="red" @click="remove()">Remove</md-button>
+      </md-dialog-actions>
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
-import Axios from "axios";
 
 export default {
   name: "Register",
@@ -119,8 +126,9 @@ export default {
     userSaved: false,
     editing: true,
     sending: false,
-    lastUser: null,
     user: null,
+    message: null,
+    showDialog: false
   }),
   validations: {
     form: {
@@ -165,41 +173,40 @@ export default {
       this.form.password = null;
       this.form.email = null;
     },
+    remove() {
+      this.showDialog = false
+      // handle user remove
+    },
     updateUser() {
       this.sending = true;
-
-      // this.$store
-      //   .dispatch("updateuser", { teamId, info })
-      //   .then((response) => {
-      //     if (response.status === 200) {
-      //       this.message =
-      //         "The user " +
-      //         info.firstname +
-      //         " " +
-      //         info.lastname +
-      //         " has successfully been updated!";
-      //       this.actionMessage = true;
-      //     }
-      //   })
-      //   .catch(() => {
-      //     // snackbar erreur
-      //   });
-
-      Axios.put("http://localhost:4000/api/users/", {
-        user: {
+      this.clearForm();
+      this.$store
+        .dispatch("modifyuser", {
           email: this.form.email,
-        },
-      })
-        .then((response) => (this.lastUser = response.data))
-        .catch((error) => {
-          console.log(error);
+          firstname: this.form.firstname,
+          lastname: this.form.lastname,
+          password: this.form.password,
+          status: true,
+          right_id: "",
+          team_id: "",
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.message =
+              "The user " +
+              this.user.firstname +
+              " " +
+              this.user.lastname +
+              " has successfully been updated!";
+            this.userSaved = true;
+            this.sending = false;
+          }
+        })
+        .catch(() => {
+          this.message = "An error occured. Please try again.";
+          this.userSaved = true;
+          this.sending = false;
         });
-      window.setTimeout(() => {
-        this.lastUser = `${this.form.firstname} ${this.form.lastname}`;
-        this.userSaved = true;
-        this.sending = false;
-        this.clearForm();
-      }, 1500);
     },
     validateUser() {
       this.$v.$touch();
