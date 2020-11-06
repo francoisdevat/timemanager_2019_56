@@ -48,22 +48,6 @@
             ><span class="md-list-item-text">Dashboard</span></router-link
           >
         </md-list-item>
-
-        <md-list-item>
-          <router-link to="/teamtable"
-            ><span class="md-list-item-text">Team Table</span></router-link
-          >
-        </md-list-item>
-        <md-list-item>
-          <router-link to="/chart"
-            ><span class="md-list-item-text">Chart</span></router-link
-          >
-        </md-list-item>
-        <md-list-item>
-          <router-link to="/chartuser"
-            ><span class="md-list-item-text">Chart User</span></router-link
-          >
-        </md-list-item>
       </md-list>
     </md-drawer>
 
