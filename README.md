@@ -8,7 +8,7 @@ npm run serve
 ```
 # Elixir Phoenix API
 ```
-Vérifier le mot de passe PostGresSQL dans config/dev.exs
+Vérifier le mot de passe PostGreSQL dans config/dev.exs
 cd api
 mix deps.get
 mix ecto.create
