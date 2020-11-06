@@ -2,12 +2,12 @@ defmodule GothamWeb.Router do
   use GothamWeb, :router
 
   pipeline :api do
-    plug CORSPlug, origin: "*"
+    plug CORSPlug, origin: "http://localhost:8080"
     plug :accepts, ["json"]
   end
 
   pipeline :jwt_authenticated do
-    plug CORSPlug, origin: "*"
+    plug CORSPlug, origin: "http://localhost:8080"
     plug Gotham.Guardian.AuthPipeline
   end
 

@@ -1,0 +1,25 @@
+# docker-compose.yml
+version: '3.7'
+services:
+    phoenix:
+        environment: 
+            MIX_ENV: dev
+        build: .
+        volumes:
+            - ./src:/app
+        ports:
+            - "4000:4000"
+        depends_on:
+            - db
+    db: 
+        image: postgres
+        environment: 
+            POSTGRES_PASSWORD: azerty
+            POSTGRES_USER: postgres
+            POSTGRES_DB: api_dev
+        volumes:
+            - ./pgdata:/var/lib/postgresql/data \ 
+        ports: 
+            - '5432:5432'
+    
+    
